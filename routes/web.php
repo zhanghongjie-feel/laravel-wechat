@@ -9,7 +9,8 @@ Route::get('wechat/code', 'LoginController@code');//登录
 ///////////////////////////////////////上传系列
 Route::get('wechat/upload','WechatController@upload');//上传
 Route::post('wechat/do_upload','WechatController@do_upload');//上传
-
+                                        //CURL
+Route::post('post_test','WechatController@post_test');
 /*
 |--------------------------------------------------------------------------
 | Web Routes

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use DB;
 class WechatController extends Controller
 {
+    public function post_test(){
+        dd($_POST);
+    }
     /*
      * 上传
      */
