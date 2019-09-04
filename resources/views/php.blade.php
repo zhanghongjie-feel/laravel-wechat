@@ -8,13 +8,13 @@
     <title>Document</title>
 </head>
 <body>
-        <?php echo 12*4*778*45;?>
+
         <?php
-        $var = "大家来学PHP";
-        echo $var;
-        echo "<br />";
-        $var = "学PHP上慕课网";
-        echo $var;
+        $man = "男";
+        $flag = $man == "男";
+        echo $flag ;
+        echo "<br />" ;
+        var_dump($flag);
         ?>
 </body>
 </html>
