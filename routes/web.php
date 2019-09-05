@@ -9,6 +9,12 @@ Route::get('wechat/code', 'LoginController@code');//登录
 ///////////////////////////////////////上传系列
 Route::get('wechat/upload','WechatController@upload');//上传
 Route::post('wechat/do_upload','WechatController@do_upload');//上传
+//线上
+Route::get('wechat/upload_wechat','WechatController@upload_wechat');//上传
+Route::post('wechat/do_upload_wechat_image','WechatController@do_upload_wechat_image');//上传
+Route::post('wechat/do_upload_wechat_video','WechatController@do_upload_wechat_video');//上传
+Route::post('wechat/do_upload_wechat_voice','WechatController@do_upload_wechat_voice');//上传
+
                                         //CURL
 Route::post('post_test','WechatController@post_test');
 /*

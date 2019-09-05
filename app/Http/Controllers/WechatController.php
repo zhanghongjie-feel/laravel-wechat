@@ -9,10 +9,137 @@ class WechatController extends Controller
     public function post_test(){
         dd($_POST);
     }
+
+    /***
+     * @param $url
+     * @param $path
+     * @return mixed
+     * 这是使用下面方法参数的返回值的方法
+     */
+    public function curl_upload($url,$path)
+    {
+        $curl=curl_init($url);
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);//将curl_exec()获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($curl,CURLOPT_POST,true);//发送一个常规的post请求
+        $form_data=[
+          'media'=> new \CURLFile($path)
+        ];
+//        dd($form_data);只是media-》CURLFile{}
+        curl_setopt($curl,CURLOPT_POSTFIELDS,$form_data);//这是文件传输最重要东西，全部数据使用HTTP协议中的"POST"操作来发送
+        $data=curl_exec($curl);
+        curl_close($curl);
+        return $data;
+    }
+    /***
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * 线上上传
+     */
+
+    public function upload_wechat(){
+//        $token=$this->get_wechat_access_token();
+//        dd($token);
+        return view('Wechat.upload_wechat');
+    }
+
+    /***
+     * @param Request $request
+     *  (--临时素材--)   image
+     */
+    public function do_upload_wechat_image(Request $request){
+//        echo storage_path();//这是绝对路径  C:\wnmp\www\laravel-wechat\storage
+
+        $name='file_name';
+        if(!empty(request()->hasFile($name))){
+            $size=$request->file($name)->getClientSize()/ 1024 / 1024;
+//            dd($size);
+            if($size > 2){
+                echo 'the file is too big';
+            }
+
+            $path=request()->file($name)->store('wechat/image');//存入本地storage
+//            dd($path);
+            $_path='/storage/'.$path;
+//            dd($_path);
+
+            //拿到图片绝对路径
+//            echo storage_path('app\public\wechat'.$path);//不要这个
+            $url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type=image';//新增临时素材
+            $path = realpath('./storage/'.$path);//realpath() 函数返回绝对路径。
+            $result=$this->curl_upload($url,$path);//调用上面方法
+//            dd($result);
+            $res=json_decode($result,1);
+//            dd($res);
+            $db=DB::connection('wechat')->table('wechat_file')->insert([
+               'media_id'=>$res['media_id'],
+                'path'=>$_path,
+                'add_time'=>time()
+            ]);
+        }
+    }
+    /***
+     * @param Request $request
+     *  (--临时素材--)  video
+     */
+    public function do_upload_wechat_video(Request $request){
+//        echo storage_path();//这是绝对路径  C:\wnmp\www\laravel-wechat\storage
+
+        $name='file_name';
+        if(!empty(request()->hasFile($name))){
+            $size=$request->file($name)->getClientSize()/ 1024 / 1024;
+//            dd($size);
+            if($size > 10){
+                echo 'the file is too big';
+            }
+
+            $path=request()->file($name)->store('wechat/video');
+//            dd($path);
+            //拿到图片绝对路径
+//            echo storage_path('app\public\wechat'.$path);//不要这个
+            $url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type=video';
+            $path = realpath('./storage/'.$path);
+            $result=$this->curl_upload($url,$path);
+            dd($result);
+        }
+    }
+    /***
+     * @param Request $request
+     * (--临时素材--)  voice
+     */
+    public function do_upload_wechat_voice(Request $request){
+//        echo storage_path();//这是绝对路径  C:\wnmp\www\laravel-wechat\storage
+
+        $name='file_name';
+        if(!empty(request()->hasFile($name))){
+            $size=$request->file($name)->getClientSize()/ 1024 / 1024;
+            $ext=$request->file($name)->getClientOriginalExtension();//弄出类型
+            $file_name=time().rand(100000,999999).'.'.$ext;
+//            dd($file_name);
+//            dd($size);
+            if($size > 10){
+                echo 'the file is too big';
+            }
+
+            $path=request()->file($name)->storeAs('wechat/voice',$file_name);
+//            dd($path);
+            //拿到图片绝对路径
+//            echo storage_path('app\public\wechat'.$path);//不要这个
+            $url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type=voice';
+            $path = realpath('./storage/'.$path);
+            $result=$this->curl_upload($url,$path);
+            dd($result);
+        }
+    }
+
+
+
+
     /*
-     * 上传
+     * 线下上传
      */
     public function upload(){
+//        $token=$this->get_wechat_access_token();
+//        dd($token);
         return view('Wechat.upload');
     }
     public function do_upload(Request $request){
@@ -27,6 +154,8 @@ class WechatController extends Controller
             echo '嘟嘟';
         }
     }
+
+
     /**
      * 获取access_token
      * @return bool|string
