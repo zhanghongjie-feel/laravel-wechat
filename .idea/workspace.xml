@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0f0506a4-13dd-4c53-87d8-808df6608c98" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/EventController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/EventController.php" />
-    </list>
+    <list default="true" id="0f0506a4-13dd-4c53-87d8-808df6608c98" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -514,12 +512,12 @@
       <workItem from="1567556988752" duration="11983000" />
       <workItem from="1567643143489" duration="60331000" />
       <workItem from="1567988912683" duration="71987000" />
-      <workItem from="1568160971561" duration="42929000" />
+      <workItem from="1568160971561" duration="43050000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="242736000" />
+    <option name="totallyTimeSpent" value="242857000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
