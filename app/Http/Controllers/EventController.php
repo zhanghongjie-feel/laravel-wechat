@@ -12,6 +12,5 @@ class EventController extends Controller
      */
     public function event(){
         echo $_GET['echostr'];
-//        echo '这是微信访问开发者接口';
     }
 }
