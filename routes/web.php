@@ -11,12 +11,29 @@ Route::get('wechat/upload','WechatController@upload');//上传
 Route::post('wechat/do_upload','WechatController@do_upload');//上传
 //线上
 Route::get('wechat/upload_wechat','WechatController@upload_wechat');//上传
-Route::post('wechat/do_upload_wechat_image','WechatController@do_upload_wechat_image');//上传
-Route::post('wechat/do_upload_wechat_video','WechatController@do_upload_wechat_video');//上传
-Route::post('wechat/do_upload_wechat_voice','WechatController@do_upload_wechat_voice');//上传
-
+Route::post('wechat/do_upload_wechat','WechatController@do_upload_wechat');//上传
+Route::get('wechat/source','WechatController@wechat_source');
+//////////api次数清0
+Route::get('wechat/clear_api','WechatController@clear_api');
                                         //CURL
 Route::post('post_test','WechatController@post_test');
+Route::get('download_source','WechatController@download_source');
+///////////////////////////////////////////标签/////////////////////
+Route::get('tag_list','TagController@tag_list');
+Route::get('add_tag','TagController@add_tag');
+Route::post('do_add_tag','TagController@do_add_tag');
+Route::get('delete_tag','TagController@delete_tag');
+Route::get('update_tag','TagController@update_tag');
+Route::post('do_update_tag','TagController@do_update_tag');
+Route::get('wechat/tag_openid_list','TagController@tag_openid_list');//标签下的openid列表
+Route::post('wechat/add_tag_openid','TagController@add_tag_openid');//为用户打上标签
+Route::get('wechat/push_tag_message','TagController@push_tag_message');//推送
+Route::post('wechat/do_push_tag_message','TagController@do_push_tag_message');//推送操作
+
+////////////////////////////////////模板消息        //////////////////////////////
+Route::get('send_template_message','WechatController@send_template_message');
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

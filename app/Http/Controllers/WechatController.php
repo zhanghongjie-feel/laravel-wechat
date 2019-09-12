@@ -1,11 +1,51 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use DB;
+use App\Tools\Tools;
+use Illuminate\Support\Facades\Storage;
+
 class WechatController extends Controller
 {
+    /***
+     * CURLFile
+     *
+     *
+     *
+     * echo empty(0);->1  empty(1)->0
+     * download_source->voice无法转为数组json_decode::（null）,而video直接出来down_url,这不公平-------video根据返回的数据拿，其他的直接用
+     * 文件名称是不是跟上传上去一样-------对
+     *
+     *
+     *数据库为什么不存url,只是存本地路径
+     * download路径判断为什么加点
+     * guzzle，client  curl怎么用 getBody()
+     * $request->file()->store()
+     * 311
+     */
+
+
+//    public $tools;
+
+    public function __construct(Tools $tools)
+    {
+        $this->tools=$tools;
+    }
+
+
+    /**
+     * 调用频次清0
+     * 96行url不对
+     */
+    public function clear_api(){
+        $url='https://api.weixin.qq.com/cgi-bin/clear_quota?access_token='.$this->tools->get_access_token();
+        $data=['appid'=>env('WECHAT_APPID')];
+        $this->tools->curl_post($url,json_encode($data));
+
+    }
+
     public function post_test(){
         dd($_POST);
     }
@@ -14,122 +54,304 @@ class WechatController extends Controller
      * @param $url
      * @param $path
      * @return mixed
-     * 这是使用下面方法参数的返回值的方法
+     * 这是被do_upload_wechat调用的方法，curl传输文件
      */
-    public function curl_upload($url,$path)
+    public function curl_upload($url,$path,$title,$desc)
     {
         $curl=curl_init($url);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);//将curl_exec()获取的信息以文件流的形式返回，而不是直接输出。
-        curl_setopt($curl,CURLOPT_POST,true);//发送一个常规的post请求
+        curl_setopt($curl,CURLOPT_POST,true);//声明我要发一个post
         $form_data=[
-          'media'=> new \CURLFile($path)
+            'media'=> new \CURLFile($path),
+            'description'=>json_encode(['title'=>$title,'introduction'=>$desc],JSON_UNESCAPED_UNICODE),
         ];
-//        dd($form_data);只是media-》CURLFile{}
-        curl_setopt($curl,CURLOPT_POSTFIELDS,$form_data);//这是文件传输最重要东西，全部数据使用HTTP协议中的"POST"操作来发送
+
+//        dd($form_data);//只是media-》CURLFile{}
+        curl_setopt($curl,CURLOPT_POSTFIELDS,$form_data);//这是执行post发送的值
         $data=curl_exec($curl);
         curl_close($curl);
         return $data;
     }
     /***
+     * guzzle传输文件
+     */
+    public function guzzle_upload($url,$path,$client,$is_video=0,$title='',$desc=''){
+        $multipart=   [
+            [
+                'name'     => 'media',
+                'contents' => fopen($path, 'r')//打开这个path找到本地资源（打开文件）
+            ],
+        ];
+        if($is_video==1){
+            $multipart[]=[
+                'name'=> 'description',
+                'contents'=>json_encode(['title'=>$title,'introduction'=>$desc],JSON_UNESCAPED_UNICODE)
+            ];
+        }
+//        dd($multipart);
+        $result=$client->request('POST',$url,[
+            'multipart'=>$multipart
+        ]);
+//        dd($result);
+        return $result->getBody();
+    }
+
+    /***
+     *      拉取微信上传素材
+     *      ----通过media_id拿到相应的资源，这玩意有方法分支
+     *          --1.直接拿资源存储:（非视频）
+     *          --2.拿链接，通过链接拿资源，再存（视频给个down_url,）
+     */
+    public function download_source(Request $request){
+        $req=$request->all();
+//        dd($req);
+        $source_info=DB::connection('wechat')->table('wechat_source')->where(['id'=>$req['id']])->first();
+        $source_arr=[1=>'image',2=>'voice',3=>'video',4=>'thumb'];
+        $source_type=$source_arr[$source_info->type];
+//        dd($source_type);
+
+                //$source_type='image';
+                //----------------------------------------测试，同下面的$media_id----------------------------
+                //素材media_id
+                //$media_id='kdM6VuFxL37ulrA2XmsLX7q6uXZO4A9iQBii7_htUdA';//视频
+                //$media_id='kdM6VuFxL37ulrA2XmsLX3zw1ALr5G3ex88mulypOZU';//音频
+        //---------------------------------------------------------------------
+        $media_id=$source_info->media_id;
+//        dd($media_id);
+        //通过获取永久素材接口拿链接，通过链接发送curl_post请求拿资源，再存
+        $url='https://api.weixin.qq.com/cgi-bin/material/get_material?access_token='.$this->get_wechat_access_token();
+        $re=$this->tools->curl_post($url,json_encode(['media_id'=>$media_id]));
+//        dd($re);
+        if($source_type != 'video'){
+            Storage::put('/wechat/'.$source_type.'/'.$source_info->file_name,$re);
+            DB::connection('wechat')->table('wechat_source')->where(['id'=>$req['id']])->update([
+                'path'=>'/storage/wechat/'.$source_type.'/'.$source_info->file_name
+            ]);
+           dd('可以，下载了非视频path');
+        }
+        //dd($re);//出来一堆乱七八糟
+        //Storage::put('/wechat/voice/file1234.mp3', $re);//这玩意就能存进本地,put 方法可用于将原始文件内容保存到磁盘上
+//        dd();
+        $result=json_decode($re,1);//mp4直接能出来数据(down_url),而voice是null(肯定啊，video是根据链接来的，其他类型)
+        //------------------------------------------------------------------------------很快获取视频资源--
+        //设置超时参数
+        $opts=array(
+            "http"=>array(
+                "method"=>"GET",
+                "timeout"=>3 //单位是秒
+            ),
+        );
+        //创建数据流上下文
+        $context=stream_context_create($opts);
+        //url请求的地址，例如：
+        $read=file_get_contents($result['down_url'],false,$context);
+        //-----------------------------------------------------------------------------------------------
+//        dd($read);//还是乱七八糟一群码！！
+        Storage::put('/wechat/video/'.$source_info->file_name, $read);
+        DB::connection('wechat')->table('wechat_source')->where(['id'=>$req['id']])->update([
+            'path'=>'/storage/wechat/'.$source_type.'/'.$source_info->file_name
+        ]);
+//        dd('ok,视频path弄好了');
+    }
+    /***
+     * 微信素材列表管理页面,拉取微信服务器素材的视图
+     */
+    public function wechat_source(Request $request,Client $client){
+        $req=$request->all();
+//        dd($req);
+        empty($req['source_type'])?$source_type='image':$source_type=$req['source_type'];
+        if(!in_array($source_type,['image','voice','video','thumb'])){
+            dd('文件类型错误');
+        }
+        echo empty(0);
+        empty($req['page'])?$page=1:$page=$req['page'];
+        if($req['page']<=0){
+            dd('你这个页数很猖狂');
+        }
+
+        $pre_page=$page-1;
+        $pre_page <=0 && $pre_page =1;
+        $next_page=$page+1;
+//        dd($page);
+        //获取素材列表接口
+        $url='https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token='.$this->tools->get_access_token();
+//        dd($source_type);
+        $data=[
+            'type'=>$source_type,
+            'offset'=>$page==1?0:($page-1)*20,
+            'count'=>20
+        ];
+        //-------打印出你的微信服务器端素材，这是curl方法-------------
+//        $re=$this->tools->curl_post($url,json_encode($data));
+//        dd($re);
+
+        //-----------guzzle使用方法(将素材信息展示出来)------------
+//        $r=$client->request('POST',$url,[
+//            'body'=>json_encode($data)
+//        ]);
+//        $re=$r->getBody();
+//        $info=json_decode($re,1);
+//        dd($info);
+
+        //--------将素材数据存入redis---------------------------------
+//        $this->tools->redis->set('source_info',json_encode($re));
+
+        //这是通过redis缓存拿
+        $re=$this->tools->redis->get('source_info_part');
+//        dd($re);
+
+
+/////////////------------------------------------------------curl需要用--------
+//        $info=json_decode($re,1);
+//        dd($info);
+//        get_object_vars($info);
+//        dd($info);//数组
+////////////---------------------------------------
+//    $redis='{"item":[{"media_id":"kdM6VuFxL37ulrA2XmsLX5R1ZJEIe6rw-1qnr0hrySA","name":"1567836726481700.jpg","update_time":1567836726,"url":"http://mmbiz.qpic.cn/mmbiz_jpg/trsbunEJN8xuHsibRE35DVfiag5ibcx2ZiciaP8M9N7Y3cMFMZoRgAVkl2g6hEQvgxvTR2gVXGWZEw9FOo262vqAnJQ/0?wx_fmt=jpeg"},{"media_id":"kdM6VuFxL37ulrA2XmsLXy85nlOMycniPUy4NjX16U0","name":"1567826579932128.png","update_time":1567826581,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg/0?wx_fmt=png"},{"media_id":"kdM6VuFxL37ulrA2XmsLX8x2TybZBhHHOkTpgK_Crwc","name":"1567826285357165.png","update_time":1567826293,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg/0?wx_fmt=png"},{"media_id":"kdM6VuFxL37ulrA2XmsLX42SOaaWQ8zVU07Lv0qMN3A","name":"1567786634179501.jpg","update_time":1567786636,"url":"http://mmbiz.qpic.cn/mmbiz_jpg/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QA7QsHK9gRu8woYbdLia5TcABibx7xrDOXYias2EDXUdXcUQ38TKqJoW1FA/0?wx_fmt=jpeg"},{"media_id":"kdM6VuFxL37ulrA2XmsLX8JrhmvQkvN2t7jILyY37P4","name":"1567784045407087.jpg","update_time":1567784059,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q/0?wx_fmt=gif"},{"media_id":"kdM6VuFxL37ulrA2XmsLX1hy9LcV4OT2IGcbYN8e7NY","name":"1567783733979089.jpg","update_time":1567783741,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q/0?wx_fmt=gif"}],"total_count":6,"item_count":6}';
+//        $this->tools->redis->set('source_info_part',$redis);
+        $redis="{\"item\":[{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX5R1ZJEIe6rw-1qnr0hrySA\",\"name\":\"1567836726481700.jpg\",\"update_time\":1567836726,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_jpg\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2ZiciaP8M9N7Y3cMFMZoRgAVkl2g6hEQvgxvTR2gVXGWZEw9FOo262vqAnJQ\\/0?wx_fmt=jpeg\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLXy85nlOMycniPUy4NjX16U0\",\"name\":\"1567826579932128.png\",\"update_time\":1567826581,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg\\/0?wx_fmt=png\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX8x2TybZBhHHOkTpgK_Crwc\",\"name\":\"1567826285357165.png\",\"update_time\":1567826293,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg\\/0?wx_fmt=png\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX42SOaaWQ8zVU07Lv0qMN3A\",\"name\":\"1567786634179501.jpg\",\"update_time\":1567786636,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_jpg\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QA7QsHK9gRu8woYbdLia5TcABibx7xrDOXYias2EDXUdXcUQ38TKqJoW1FA\\/0?wx_fmt=jpeg\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX8JrhmvQkvN2t7jILyY37P4\",\"name\":\"1567784045407087.jpg\",\"update_time\":1567784059,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q\\/0?wx_fmt=gif\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX1hy9LcV4OT2IGcbYN8e7NY\",\"name\":\"1567783733979089.jpg\",\"update_time\":1567783741,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q\\/0?wx_fmt=gif\"}],\"total_count\":6,\"item_count\":6}";
+        ///////////////////////////////////////////////////////////
+
+        $info=json_decode($redis,1);
+//        dd($info);
+        $media_id_list=[];
+        $source_arr=['image'=>1,'voice'=>2,'video'=>3,'thumb'=>4];
+        foreach($info['item'] as $v){
+//           dd($info['item']);
+
+            //同步数据库
+           $media_info = DB::connection('wechat')->table('wechat_source')->where(['media_id'=>$v['media_id']])->select(['id'])->first();
+//           dd($media_info);
+            if(empty($media_info)){
+                DB::connection('wechat')->table('wechat_source')->insert([
+                    'media_id'=>$v['media_id'],
+                    'type'=>$source_arr[$source_type],
+                    'add_time'=>$v['update_time'],
+                    'file_name'=>$v['name']
+                ]);
+            }
+
+            $media_id_list[]=$v['media_id'];
+        }
+       $source_info=DB::connection('wechat')->table('wechat_source')->whereIn('media_id',$media_id_list)->where(['type'=>$source_arr[$source_type]])->get();
+//        dd($source_info);
+
+        foreach($source_info as $k=>$v){
+            $is_download=0; // 0 无需下载 1 需要下载
+            if(empty($v->path)){
+                $is_download=1;
+            }elseif(!empty($v->path) && !file_exists('.'.$v->path)){
+                $is_download=1;
+            }
+            $source_info[$k]->is_download=$is_download;//设置一个参数
+//            dd($is_download);
+        }
+//        dd($source_info);看本地数据库foreach数据，这是Collection集合类型，变成数组->toArray();
+        return view('Wechat.source',['info'=>$source_info,'pre_page'=>$pre_page,'next_page'=>$next_page,'source_type'=>$source_type]);
+    }
+
+
+    /***
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * 线上上传
      */
-
     public function upload_wechat(){
-//        $token=$this->get_wechat_access_token();
-//        dd($token);
         return view('Wechat.upload_wechat');
     }
-
     /***
      * @param Request $request
-     *  (--临时素材--)   image
+     *  (--临时素材--)
      */
-    public function do_upload_wechat_image(Request $request){
+    public function do_upload_wechat(Request $request,Client $client){
 //        echo storage_path();//这是绝对路径  C:\wnmp\www\laravel-wechat\storage
+        $type=$request->all()['type'];
+        $source_type='';
+        switch ($type){
+            case 1;$source_type='image';break;
+            case 2;$source_type='voice';break;
+            case 3;$source_type='video';break;
+            case 4;$source_type='thumb';break;
+            default;
+        }
 
         $name='file_name';
-        if(!empty(request()->hasFile($name))){
+        if(!empty(request()->hasFile($name)) && request()->file($name)->isValid()){
+            //大小 资源类型
+            $ext=$request->file($name)->getClientOriginalExtension();//弄出文件类型
             $size=$request->file($name)->getClientSize()/ 1024 / 1024;
-//            dd($size);
-            if($size > 2){
-                echo 'the file is too big';
+            if($source_type=='image'){
+               if(!in_array($ext,['jpg','png','jpeg','gif'])){
+                   dd('不是图片格式');
+               }
+               if($size > 2){
+                   dd('图片过大');
+               }
+            }elseif($source_type=='voice'){
+                if(!in_array($ext,['mp3','amr'])){
+                    dd('非音频格式');
+                }
+                if($size>2){
+                    dd('这个音频太大了');
+                }
+            }elseif($source_type=='video'){
+                if(!in_array($ext,['mp4'])){
+                    dd('非视频格式');
+                }
+                if($size>10){
+                    dd('视频过大');
+                }
+            }elseif($source_type=='thumb'){
+                if(!in_array($ext,['jpg'])){
+                    dd('非jpg格式');
+                }
+                if($size>0.0625){
+                    dd('缩略图太大');
+                }
             }
-
-            $path=request()->file($name)->store('wechat/image');//存入本地storage
-//            dd($path);
+            $local_path=request()->file($name)->store('wechat/'.$source_type);//存入本地storage
+//            dd($local_path);
+            $file_name=time().rand(100000,999999).'.'.$ext;//随便用rand函数生成一个名字
+            $path=request()->file($name)->storeAs('wechat/'.$source_type,$file_name);//storeAs,文件上传时，修改上传的文件名
             $_path='/storage/'.$path;
 //            dd($_path);
-
-            //拿到图片绝对路径
-//            echo storage_path('app\public\wechat'.$path);//不要这个
-            $url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type=image';//新增临时素材
             $path = realpath('./storage/'.$path);//realpath() 函数返回绝对路径。
-            $result=$this->curl_upload($url,$path);//调用上面方法
+//            dd($path);
+            //新增临时素材接口
+            //$url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type='.$source_type;//新增临时素材。
+            //新增其他类型永久素材
+            $url='https://api.weixin.qq.com/cgi-bin/material/add_material?access_token='.$this->get_wechat_access_token().'&type='.$source_type;
+            if($source_type=='video'){
+                $title='标题';
+                $desc='描述';
+                $result=$this->guzzle_upload($url,$path,$client,1,$title,$desc);//guzzle上传video
+            }else{
+                $result=$this->guzzle_upload($url,$path,$client);//guzzle上传除video外素材
+            }
+            //这是curl方式  {"type":"image","media_id":"loT4fyrpRqfwAeDSwJ5oLqQi_bEUY48zE22tCgqIEnOnGrP2KWqIy2r1T1ZD2KgB","created_at":1567774545}
+                    //$result=$this->curl_upload($url,$path);//调用上面curl_upload方法
+                    //dd($result);
+            //这是guzzle方法(注释：这个不能用！！！！用上边)
+//            $result=$this->guzzle_upload($url,$path,$client);
 //            dd($result);
-            $res=json_decode($result,1);
-//            dd($res);
-            $db=DB::connection('wechat')->table('wechat_file')->insert([
-               'media_id'=>$res['media_id'],
+            $re=json_decode($result,1);
+            dd($re);
+//插入数据库
+
+            DB::connection('wechat')->table('wechat_source')->insert([
+                'media_id'=>$re['media_id'],
+                'type'=>$type,
                 'path'=>$_path,
                 'add_time'=>time()
             ]);
-        }
-    }
-    /***
-     * @param Request $request
-     *  (--临时素材--)  video
-     */
-    public function do_upload_wechat_video(Request $request){
-//        echo storage_path();//这是绝对路径  C:\wnmp\www\laravel-wechat\storage
-
-        $name='file_name';
-        if(!empty(request()->hasFile($name))){
-            $size=$request->file($name)->getClientSize()/ 1024 / 1024;
-//            dd($size);
-            if($size > 10){
-                echo 'the file is too big';
-            }
-
-            $path=request()->file($name)->store('wechat/video');
-//            dd($path);
-            //拿到图片绝对路径
+                //拿到图片绝对路径
 //            echo storage_path('app\public\wechat'.$path);//不要这个
-            $url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type=video';
-            $path = realpath('./storage/'.$path);
-            $result=$this->curl_upload($url,$path);
-            dd($result);
+
+
         }
     }
-    /***
-     * @param Request $request
-     * (--临时素材--)  voice
-     */
-    public function do_upload_wechat_voice(Request $request){
-//        echo storage_path();//这是绝对路径  C:\wnmp\www\laravel-wechat\storage
 
-        $name='file_name';
-        if(!empty(request()->hasFile($name))){
-            $size=$request->file($name)->getClientSize()/ 1024 / 1024;
-            $ext=$request->file($name)->getClientOriginalExtension();//弄出类型
-            $file_name=time().rand(100000,999999).'.'.$ext;
-//            dd($file_name);
-//            dd($size);
-            if($size > 10){
-                echo 'the file is too big';
-            }
 
-            $path=request()->file($name)->storeAs('wechat/voice',$file_name);
-//            dd($path);
-            //拿到图片绝对路径
-//            echo storage_path('app\public\wechat'.$path);//不要这个
-            $url='https://api.weixin.qq.com/cgi-bin/media/upload?access_token='.$this->get_wechat_access_token().'&type=voice';
-            $path = realpath('./storage/'.$path);
-            $result=$this->curl_upload($url,$path);
-            dd($result);
-        }
-    }
 
 
 
@@ -148,7 +370,7 @@ class WechatController extends Controller
 //        dd($request->file($name));//如果没有返回null
 //        dd($request->file($name)->isValid());//这个如果没有文件就会报错
         if(!empty($request->hasFile($name)) && request()->file($name)->isValid()){
-            $path=request()->file($name)->store('goods');
+            $path=request()->file('image')->store('goods');
             dd('/storage/'.$path);
         }else{
             echo '嘟嘟';
@@ -162,14 +384,15 @@ class WechatController extends Controller
      */
 
     public function get_wechat_access_token(){
-        return $this->get_access_token();
+        return $this->tools->get_access_token();
     }
 
     /**
      * @return bool|string
      * 获取用户列表
      */
-    public function get_user_list(){
+    public function get_user_list(Request $request){
+        //--------------------------------------------------我是这么存的
 //        //获取用户openid
 //        $openid="oJMd0wZtgTLURJ3hS1OaiZTd_ZvE";
 //        //获取用户信息
@@ -185,31 +408,37 @@ class WechatController extends Controller
 //            'subscribe_time'=>$user['subscribe_time']
 //        ]);
 //        die();
+        ////----------------------------------这是通过openid拉去线上粉丝----------------------------------------------------------------------------------------------
         //获取用户openid
-        $result=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$this->get_wechat_access_token().'&next_openid=');
-        $re=json_decode($result,1);
-//        dd($re);
-        //获取用户信息
-        $last_info=[];
-        foreach($re['data']['openid'] as $k=>$v){
-            $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$this->get_wechat_access_token().'&openid='.$v.'&lang=zh_CN');
-            $user=json_decode($user_info,1);
-//            dd($user);
-            $last_info[$k]['nickname']=$user['nickname'];
-            $last_info[$k]['openid']=$v;
-            $last_info[$k]['subscribe']=$user['subscribe'];
-            $last_info[$k]['city']=$user['city'];
-            $last_info[$k]['country']=$user['country'];
-            $last_info[$k]['headimgurl']=$user['headimgurl'];
-            $last_info[$k]['subscribe_time']=$user['subscribe_time'];
-//            dd($user);
-        }
+//        $result=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$this->get_wechat_access_token().'&next_openid=');
+//        $re=json_decode($result,1);
+////        dd($re);
+//        //获取用户信息
+//        $last_info=[];
+//        foreach($re['data']['openid'] as $k=>$v){
+//            $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$this->get_wechat_access_token().'&openid='.$v.'&lang=zh_CN');
+//            $user=json_decode($user_info,1);
+////            dd($user);
+//            $last_info[$k]['nickname']=$user['nickname'];
+//            $last_info[$k]['openid']=$v;
+//            $last_info[$k]['subscribe']=$user['subscribe'];
+//            $last_info[$k]['city']=$user['city'];
+//            $last_info[$k]['country']=$user['country'];
+//            $last_info[$k]['headimgurl']=$user['headimgurl'];
+//            $last_info[$k]['subscribe_time']=$user['subscribe_time'];
+////            dd($user);
+//        }
+  ///-----------------------------------------------------------------------------------------------------------------------------------------
 //        dd($last_info);
 
 //        dd($db);
 //        dd($last_info);
 //        dd($re['data']['openid']);
-        return view('Wechat.userList',['info'=>$last_info]);
+        //数据库
+        $req=$request->all();
+        $db=DB::connection('wechat')->table('user_info')->where(['subscribe'=>1])->get();
+//        dd($db);
+        return view('Wechat.userList',['info'=>$db,'tagid'=>isset($req['tagid'])?$req['tagid']:'']);
     }
     public function get_detailed_info(){
         $data=$this->get_user_list();
@@ -220,34 +449,39 @@ class WechatController extends Controller
         return view('Wechat.userInfo');
     }
 
-    public function get_access_token(){
-//        $result=file_get_contents('./web.config');
-//        dd($result);
 
-//        dd($re);
-        //这是php的redis
-        $redis=new \Redis();
-        $redis->connect('127.0.0.1','6379');
 
-//        dd($redis);
-        //加入缓存
-        $access_token_key='wechat_access_token';
-        if($redis->exists($access_token_key)){
-            //存在
-            return $redis->get($access_token_key);
-        }else{
-            //不存在
-            $result=file_get_contents('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.env('WECHAT_APPID').'&secret='.env('WECHAT_APPSECRET'));
-//        dd($result);
-            $re=json_decode($result,1);
-//            dd($re);
-            $redis->set($access_token_key,$re['access_token'],$re['expires_in']);//加入缓存
-            return $re['access_token'];
-        }
-
+    /*
+     * 发送模板消息
+     */
+    public function send_template_message(){
+        $openid='oJMd0wXzAhg5HiK7gF7aHfMxi2AQ';
+        $url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$this->tools->get_access_token();
+        $data=[
+            'touser'=>$openid,
+            'template_id'=>'gDsIyl1h_elVHIzk_V2txsZhno_jspfhZwISvAbukEY',
+            'url'=>'www.laravel.com',
+            'data'=>[
+                'first'=>[
+                    'value'=>'操蛋阿伟',
+                    'color'=>''
+                ],
+                'keyword1'=>[
+                    'value'=>'阿伟'
+                ],
+                'keyword2'=>[
+                    'value'=>'你太草蛋了'
+                ],
+                'remark'=>[
+                    'value'=>'欢迎阿伟继续草蛋',
+                    'color'=>''
+                ]
+            ]
+        ];
+        $re=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+        $result=json_decode($re,1);
+        dd($result);
     }
-
-
 
 
 
