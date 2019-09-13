@@ -328,10 +328,14 @@ class WechatController extends Controller
             }else{
                 $result=$this->guzzle_upload($url,$path,$client);//guzzle上传除video外素材
             }
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //这是curl方式  {"type":"image","media_id":"loT4fyrpRqfwAeDSwJ5oLqQi_bEUY48zE22tCgqIEnOnGrP2KWqIy2r1T1ZD2KgB","created_at":1567774545}
-                    //$result=$this->curl_upload($url,$path);//调用上面curl_upload方法
+                //$title='标题';
+                //$desc='描述';
+                //$result=$this->curl_upload($url,$path,$title,$desc);//调用上面curl_upload方法
                     //dd($result);
-            //这是guzzle方法(注释：这个不能用！！！！用上边)
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //这是guzzle方法(注yi：这个不能用！！！！用上边)
 //            $result=$this->guzzle_upload($url,$path,$client);
 //            dd($result);
             $re=json_decode($result,1);
