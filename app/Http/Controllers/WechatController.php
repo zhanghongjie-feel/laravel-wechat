@@ -147,11 +147,13 @@ class WechatController extends Controller
         $read=file_get_contents($result['down_url'],false,$context);
         //-----------------------------------------------------------------------------------------------
 //        dd($read);//还是乱七八糟一群码！！
+
+
         Storage::put('/wechat/video/'.$source_info->file_name, $read);
         DB::connection('wechat')->table('wechat_source')->where(['id'=>$req['id']])->update([
             'path'=>'/storage/wechat/'.$source_type.'/'.$source_info->file_name
         ]);
-//        dd('ok,视频path弄好了');
+        dd('ok,视频path弄好了');
     }
     /***
      * 微信素材列表管理页面,拉取微信服务器素材的视图
@@ -163,7 +165,7 @@ class WechatController extends Controller
         if(!in_array($source_type,['image','voice','video','thumb'])){
             dd('文件类型错误');
         }
-        echo empty(0);
+//        echo empty(0);
         empty($req['page'])?$page=1:$page=$req['page'];
         if($req['page']<=0){
             dd('你这个页数很猖狂');
@@ -175,14 +177,13 @@ class WechatController extends Controller
 //        dd($page);
         //获取素材列表接口
         $url='https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token='.$this->tools->get_access_token();
-//        dd($source_type);
         $data=[
             'type'=>$source_type,
             'offset'=>$page==1?0:($page-1)*20,
             'count'=>20
         ];
         //-------打印出你的微信服务器端素材，这是curl方法-------------
-//        $re=$this->tools->curl_post($url,json_encode($data));
+        $re=$this->tools->curl_post($url,json_encode($data));
 //        dd($re);
 
         //-----------guzzle使用方法(将素材信息展示出来)------------
@@ -194,10 +195,10 @@ class WechatController extends Controller
 //        dd($info);
 
         //--------将素材数据存入redis---------------------------------
-//        $this->tools->redis->set('source_info',json_encode($re));
-
+//        $this->tools->redis->set('source_info_video',$re);
+//dd();
         //这是通过redis缓存拿
-        $re=$this->tools->redis->get('source_info_part');
+        $re=$this->tools->redis->get('source_info_image');
 //        dd($re);
 
 
@@ -206,13 +207,14 @@ class WechatController extends Controller
 //        dd($info);
 //        get_object_vars($info);
 //        dd($info);//数组
-////////////---------------------------------------
+////////////---------------------------------------拿出redis,将/删掉，但是并不能用
 //    $redis='{"item":[{"media_id":"kdM6VuFxL37ulrA2XmsLX5R1ZJEIe6rw-1qnr0hrySA","name":"1567836726481700.jpg","update_time":1567836726,"url":"http://mmbiz.qpic.cn/mmbiz_jpg/trsbunEJN8xuHsibRE35DVfiag5ibcx2ZiciaP8M9N7Y3cMFMZoRgAVkl2g6hEQvgxvTR2gVXGWZEw9FOo262vqAnJQ/0?wx_fmt=jpeg"},{"media_id":"kdM6VuFxL37ulrA2XmsLXy85nlOMycniPUy4NjX16U0","name":"1567826579932128.png","update_time":1567826581,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg/0?wx_fmt=png"},{"media_id":"kdM6VuFxL37ulrA2XmsLX8x2TybZBhHHOkTpgK_Crwc","name":"1567826285357165.png","update_time":1567826293,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg/0?wx_fmt=png"},{"media_id":"kdM6VuFxL37ulrA2XmsLX42SOaaWQ8zVU07Lv0qMN3A","name":"1567786634179501.jpg","update_time":1567786636,"url":"http://mmbiz.qpic.cn/mmbiz_jpg/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QA7QsHK9gRu8woYbdLia5TcABibx7xrDOXYias2EDXUdXcUQ38TKqJoW1FA/0?wx_fmt=jpeg"},{"media_id":"kdM6VuFxL37ulrA2XmsLX8JrhmvQkvN2t7jILyY37P4","name":"1567784045407087.jpg","update_time":1567784059,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q/0?wx_fmt=gif"},{"media_id":"kdM6VuFxL37ulrA2XmsLX1hy9LcV4OT2IGcbYN8e7NY","name":"1567783733979089.jpg","update_time":1567783741,"url":"http://mmbiz.qpic.cn/mmbiz_png/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q/0?wx_fmt=gif"}],"total_count":6,"item_count":6}';
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //        $this->tools->redis->set('source_info_part',$redis);
-        $redis="{\"item\":[{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX5R1ZJEIe6rw-1qnr0hrySA\",\"name\":\"1567836726481700.jpg\",\"update_time\":1567836726,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_jpg\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2ZiciaP8M9N7Y3cMFMZoRgAVkl2g6hEQvgxvTR2gVXGWZEw9FOo262vqAnJQ\\/0?wx_fmt=jpeg\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLXy85nlOMycniPUy4NjX16U0\",\"name\":\"1567826579932128.png\",\"update_time\":1567826581,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg\\/0?wx_fmt=png\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX8x2TybZBhHHOkTpgK_Crwc\",\"name\":\"1567826285357165.png\",\"update_time\":1567826293,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg\\/0?wx_fmt=png\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX42SOaaWQ8zVU07Lv0qMN3A\",\"name\":\"1567786634179501.jpg\",\"update_time\":1567786636,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_jpg\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QA7QsHK9gRu8woYbdLia5TcABibx7xrDOXYias2EDXUdXcUQ38TKqJoW1FA\\/0?wx_fmt=jpeg\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX8JrhmvQkvN2t7jILyY37P4\",\"name\":\"1567784045407087.jpg\",\"update_time\":1567784059,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q\\/0?wx_fmt=gif\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX1hy9LcV4OT2IGcbYN8e7NY\",\"name\":\"1567783733979089.jpg\",\"update_time\":1567783741,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q\\/0?wx_fmt=gif\"}],\"total_count\":6,\"item_count\":6}";
+        //$redis="{\"item\":[{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX5R1ZJEIe6rw-1qnr0hrySA\",\"name\":\"1567836726481700.jpg\",\"update_time\":1567836726,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_jpg\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2ZiciaP8M9N7Y3cMFMZoRgAVkl2g6hEQvgxvTR2gVXGWZEw9FOo262vqAnJQ\\/0?wx_fmt=jpeg\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLXy85nlOMycniPUy4NjX16U0\",\"name\":\"1567826579932128.png\",\"update_time\":1567826581,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg\\/0?wx_fmt=png\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX8x2TybZBhHHOkTpgK_Crwc\",\"name\":\"1567826285357165.png\",\"update_time\":1567826293,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8xuHsibRE35DVfiag5ibcx2Zicia9xj7jQ9fvs6Z2lNTic1ToqksJpAtFTeXYOGkVueLYV62yzYVGV24Ysg\\/0?wx_fmt=png\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX42SOaaWQ8zVU07Lv0qMN3A\",\"name\":\"1567786634179501.jpg\",\"update_time\":1567786636,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_jpg\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QA7QsHK9gRu8woYbdLia5TcABibx7xrDOXYias2EDXUdXcUQ38TKqJoW1FA\\/0?wx_fmt=jpeg\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX8JrhmvQkvN2t7jILyY37P4\",\"name\":\"1567784045407087.jpg\",\"update_time\":1567784059,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q\\/0?wx_fmt=gif\"},{\"media_id\":\"kdM6VuFxL37ulrA2XmsLX1hy9LcV4OT2IGcbYN8e7NY\",\"name\":\"1567783733979089.jpg\",\"update_time\":1567783741,\"url\":\"http:\\/\\/mmbiz.qpic.cn\\/mmbiz_png\\/trsbunEJN8zCpOIuHOVYU7RhbgZ1d8QAqvvlHglArUySq5ht3UocL6Mo9W0QS4wKAFAWw8vfP9JAjKEs9IFM3Q\\/0?wx_fmt=gif\"}],\"total_count\":6,\"item_count\":6}";
         ///////////////////////////////////////////////////////////
 
-        $info=json_decode($redis,1);
+        $info=json_decode($re,1);
 //        dd($info);
         $media_id_list=[];
         $source_arr=['image'=>1,'voice'=>2,'video'=>3,'thumb'=>4];
@@ -227,7 +229,7 @@ class WechatController extends Controller
                     'media_id'=>$v['media_id'],
                     'type'=>$source_arr[$source_type],
                     'add_time'=>$v['update_time'],
-                    'file_name'=>$v['name']
+                    'file_name'=>$v['name'],
                 ]);
             }
 
@@ -309,7 +311,7 @@ class WechatController extends Controller
                     dd('缩略图太大');
                 }
             }
-            $local_path=request()->file($name)->store('wechat/'.$source_type);//存入本地storage
+            //$local_path=request()->file($name)->store('wechat/'.$source_type);//存入本地storage
 //            dd($local_path);
             $file_name=time().rand(100000,999999).'.'.$ext;//随便用rand函数生成一个名字
             $path=request()->file($name)->storeAs('wechat/'.$source_type,$file_name);//storeAs,文件上传时，修改上传的文件名
@@ -329,7 +331,7 @@ class WechatController extends Controller
                 $result=$this->guzzle_upload($url,$path,$client);//guzzle上传除video外素材
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //这是curl方式  {"type":"image","media_id":"loT4fyrpRqfwAeDSwJ5oLqQi_bEUY48zE22tCgqIEnOnGrP2KWqIy2r1T1ZD2KgB","created_at":1567774545}
+            //这是curl上传视频方式(如果非video则只需要传$url,$path)  {"type":"image","media_id":"loT4fyrpRqfwAeDSwJ5oLqQi_bEUY48zE22tCgqIEnOnGrP2KWqIy2r1T1ZD2KgB","created_at":1567774545}
                 //$title='标题';
                 //$desc='描述';
                 //$result=$this->curl_upload($url,$path,$title,$desc);//调用上面curl_upload方法
@@ -338,6 +340,8 @@ class WechatController extends Controller
             //这是guzzle方法(注yi：这个不能用！！！！用上边)
 //            $result=$this->guzzle_upload($url,$path,$client);
 //            dd($result);
+            ////////////////////////////////////////////////
+
             $re=json_decode($result,1);
             dd($re);
 //插入数据库
@@ -354,7 +358,27 @@ class WechatController extends Controller
 
         }
     }
+    /***
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 删除素材
+     */
+    public function del_wechat_source(Request $request){
+        $req=$request->all();
+        $media_id=$req['media_id'];
+//        dd($media_id);
+        $url='https://api.weixin.qq.com/cgi-bin/material/del_material?access_token='.$this->tools->get_access_token();
+        $data=[
+            'media_id'=>$media_id
+        ];
+        $re=$this->tools->curl_post($url,json_encode($data));
+        $result=json_decode($re);
+//        dd($result);
+        $db=DB::connection('wechat')->table('wechat_source')->where([
+            'media_id'=>$media_id
+        ])->delete();
 
+        dd($db);
+    }
 
 
 
@@ -414,24 +438,25 @@ class WechatController extends Controller
 //        die();
         ////----------------------------------这是通过openid拉去线上粉丝----------------------------------------------------------------------------------------------
         //获取用户openid
-//        $result=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$this->get_wechat_access_token().'&next_openid=');
-//        $re=json_decode($result,1);
-////        dd($re);
-//        //获取用户信息
-//        $last_info=[];
-//        foreach($re['data']['openid'] as $k=>$v){
-//            $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$this->get_wechat_access_token().'&openid='.$v.'&lang=zh_CN');
-//            $user=json_decode($user_info,1);
-////            dd($user);
-//            $last_info[$k]['nickname']=$user['nickname'];
-//            $last_info[$k]['openid']=$v;
-//            $last_info[$k]['subscribe']=$user['subscribe'];
-//            $last_info[$k]['city']=$user['city'];
-//            $last_info[$k]['country']=$user['country'];
-//            $last_info[$k]['headimgurl']=$user['headimgurl'];
-//            $last_info[$k]['subscribe_time']=$user['subscribe_time'];
-////            dd($user);
-//        }
+        $result=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$this->get_wechat_access_token().'&next_openid=');
+        $re=json_decode($result,1);
+//        dd($re);
+        //获取用户信息
+        $last_info=[];
+        foreach($re['data']['openid'] as $k=>$v){
+            $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$this->get_wechat_access_token().'&openid='.$v.'&lang=zh_CN');
+//            dd($user_info);
+            $user=json_decode($user_info,1);//把json字符串转为数组
+//            dd($user);
+            $last_info[$k]['nickname']=$user['nickname'];
+            $last_info[$k]['openid']=$v;
+            $last_info[$k]['subscribe']=$user['subscribe'];
+            $last_info[$k]['city']=$user['city'];
+            $last_info[$k]['country']=$user['country'];
+            $last_info[$k]['headimgurl']=$user['headimgurl'];
+            $last_info[$k]['subscribe_time']=$user['subscribe_time'];
+//            dd($user);
+        }
   ///-----------------------------------------------------------------------------------------------------------------------------------------
 //        dd($last_info);
 
@@ -459,7 +484,7 @@ class WechatController extends Controller
      * 发送模板消息
      */
     public function send_template_message(){
-        $openid='oJMd0wXzAhg5HiK7gF7aHfMxi2AQ';
+        $openid='oJMd0weUXJppG4bt4GaqSKRw9Ct4';
         $url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$this->tools->get_access_token();
         $data=[
             'touser'=>$openid,
@@ -467,17 +492,17 @@ class WechatController extends Controller
             'url'=>'www.laravel.com',
             'data'=>[
                 'first'=>[
-                    'value'=>'操蛋阿伟',
+                    'value'=>'阿伟',
                     'color'=>''
                 ],
                 'keyword1'=>[
-                    'value'=>'阿伟'
+                    'value'=>'阿伟啊'
                 ],
                 'keyword2'=>[
-                    'value'=>'你太草蛋了'
+                    'value'=>'你不操蛋了'
                 ],
                 'remark'=>[
-                    'value'=>'欢迎阿伟继续草蛋',
+                    'value'=>'假期快乐',
                     'color'=>''
                 ]
             ]

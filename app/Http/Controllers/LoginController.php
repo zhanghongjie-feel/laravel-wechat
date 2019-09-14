@@ -36,7 +36,7 @@ class LoginController extends Controller
 //            dd($wechat_user_info);
         $openid=$re['openid'];
         $wechat_info=DB::connection('wechat')->table('user_wechat')->first();
-//        dd($wechat_info);
+        dd($wechat_info);
         if(!empty($wechat_info)){
             //存在，登录
             $request->session()->put('uid',$wechat_info->uid);

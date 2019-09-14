@@ -9,12 +9,17 @@
             <table border="1">
                 <tr>
                     <td>id</td>
+                    <td>粉丝
+                    </td>
                    <td>openid</td>
                 </tr>
-                @foreach($openid as $k=>$v)
+                @foreach($info as $k=>$v)
                 <tr>
-                    <td>{{$k}}</td>
-                    <td>{{$v}}</td>
+                    <td>{{$info[$k]->id}}</td>
+                    <td>{{$info[$k]->nickname}}
+                        <img src="{{asset($info[$k]->headimgurl)}}" alt="">
+                    </td>
+                    <td>{{$info[$k]->openid}}</td>
                 </tr>
                 @endforeach
             </table>

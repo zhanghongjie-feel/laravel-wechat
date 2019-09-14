@@ -5,6 +5,8 @@
 <body>
     <center>
         <h1>公众号标签管理</h1><br><br><br>
+        <a href="{{url('get_openid')}}">获取用户身上有几个标签（注意是手动添加）</a>
+        <a href="{{url('cancel_tag')}}">取消他标签下几个粉丝（也是手打）</a>
         <a href="{{url('add_tag')}}">添加标签</a><br><br>
         <table border="1">
             <tr>

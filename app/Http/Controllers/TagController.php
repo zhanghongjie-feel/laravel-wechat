@@ -103,8 +103,8 @@ class TagController extends Controller
         $openid=$result['data']['openid'];
 //        dd($d);
         $db=DB::connection('wechat')->table('user_info')->whereIn('openid',$openid)->get();
-        dd($db);
-        return view('Tag.openidList',['openid'=>$openid]);
+//        dd($db);
+        return view('Tag.openidList',['info'=>$db]);
     }
 
     public function add_tag_openid(Request $request){
@@ -148,6 +148,33 @@ class TagController extends Controller
         $re=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
 //        dd($re);
         $result=json_decode($re,1);
+        dd($result);
+    }
+
+    /**
+     * 获取用户身上有几个标签
+     */
+    public function get_openid(){
+        $url='https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token='.$this->tools->get_access_token();
+
+        $data=[
+            "openid"=>"oJMd0weUXJppG4bt4GaqSKRw9Ct4"
+        ];
+        $res=$this->tools->curl_post($url,json_encode($data));
+        $result=json_decode($res,1);
+        dd($result);
+    }
+/*
+ * 取消标签下几个粉丝
+ */
+    public function cancel_tag(){
+        $url='https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token='.$this->tools->get_access_token();
+        $data=[
+            'openid_list'=>['oJMd0wds98aX0pJLebIaxa2eMoNY','oJMd0wcq7cO14e9PYacBE8SP9yug'],
+            'tagid'=>111
+        ];
+        $res=$this->tools->curl_post($url,json_encode($data));
+        $result=json_decode($res,1);
         dd($result);
     }
 }
