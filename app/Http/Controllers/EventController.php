@@ -30,9 +30,15 @@ class EventController extends Controller
 //        dd($xml_obj);
         $xml_arr=(array)$xml_obj;//强制类型转换:obj->array
 //        dd($xml_arr);
-        //\Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));//又写了一个laravel日志，他会不会与别的混了呢
+        \Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));//又写了一个laravel日志，他会不会与别的混了呢
 
         //业务逻辑
+        if($xml_arr['MsgType']=='event'){
+            if($xml_arr['Event']=='subscribe'){
+                $share_code=explode('_',$xml_arr['EventKey'])[1];
+                dd($share_code);
+            }
+        }
 
     }
 }
