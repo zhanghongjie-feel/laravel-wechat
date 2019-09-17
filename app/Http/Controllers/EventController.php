@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use DB;
 
 class EventController extends Controller
 {
@@ -36,9 +36,22 @@ class EventController extends Controller
         if($xml_arr['MsgType']=='event'){
             if($xml_arr['Event']=='subscribe'){
                 $share_code=explode('_',$xml_arr['EventKey'])[1];
-                dd($share_code);
+                $user_openid=$xml_arr['FromUserName'];//粉丝openid
+                //判断是否已经关注过
+                $wechat_openid=DB::connection('wechat')->table('wechat_openid')->where(['openid'=>$user_openid])->first();
+                if(empty($wechat_openid)){
+                    DB::connection('wechat')->table('user')->where(['id'=>$share_code])->increment('share_num',1);
+                    DB::connection('wechat')->table('wechat_openid')->insert([
+                        'openid'=>$user_openid,
+                        'add_time'=>time()
+                    ]);
+                }
+
             }
         }
 
+        $message='欢迎关注';
+        $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+        echo $xml_str;
     }
 }
