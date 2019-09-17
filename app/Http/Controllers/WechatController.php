@@ -183,7 +183,7 @@ class WechatController extends Controller
             'count'=>20
         ];
         //-------打印出你的微信服务器端素材，这是curl方法-------------
-        $re=$this->tools->curl_post($url,json_encode($data));
+//        $re=$this->tools->curl_post($url,json_encode($data));
 //        dd($re);
 
         //-----------guzzle使用方法(将素材信息展示出来)------------
@@ -195,10 +195,10 @@ class WechatController extends Controller
 //        dd($info);
 
         //--------将素材数据存入redis---------------------------------
-//        $this->tools->redis->set('source_info_video',$re);
+//        $this->tools->redis->set('source_info_voice',$re);
 //dd();
         //这是通过redis缓存拿
-        $re=$this->tools->redis->get('source_info_image');
+        $re=$this->tools->redis->get('source_info_voice');
 //        dd($re);
 
 

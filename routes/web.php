@@ -35,7 +35,14 @@ Route::get('cancel_tag','TagController@cancel_tag');//把一个标签下粉丝�
 ////////////////////////////////////模板消息        //////////////////////////////
 Route::get('send_template_message','WechatController@send_template_message');
 
+/////////////////Exam
+Route::get('exam/login','ExamController@login');
+Route::get('exam/wechat_login','ExamController@wechat_login');
+Route::get('exam/code', 'ExamController@code');//登录
 
+//////////////////////////////////////////////////生成专属二维码
+Route::get('agent/user_list','AgentController@agent_list');
+Route::get('agent/create_qrcode','AgentController@create_qrcode');//创建二维码
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,3 +57,34 @@ Route::get('send_template_message','WechatController@send_template_message');
 Route::get('/', function () {
     return view('welcome');
 });
+/////////exam->login
+Route::group(['middleware' => ['login']], function () {
+    Route::post('exam/openid_list','ExamController@openid_list');
+    Route::get('exam/liuyan','ExamController@liuyan');
+    Route::post('exam/do_liuyan','ExamController@do_liuyan');
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////Secret
+Route::get('secret/user_list','Secret\UserController@userList');

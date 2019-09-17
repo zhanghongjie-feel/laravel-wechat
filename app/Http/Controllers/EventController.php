@@ -16,6 +16,7 @@ class EventController extends Controller
 //        dd($_POST);微信传过来的数据是postman->raw的格式，大POST是拿不到的
 //        echo $_GET['echostr'];//这个玩意是在第一次设置接口配置信息时需要在url里echo一下？echostr=111以表示微信返回给开发者的接口可以用
         $xml_string=file_get_contents('php://input');//微信返回的格式是xml字符串，用它来获取到
+        dd($xml_string);
         $wechat_log_path=storage_path('logs/wechat/'.date('Y-m-d').'.log');
         file_put_contents($wechat_log_path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",FILE_APPEND);
         file_put_contents($wechat_log_path,$xml_string,FILE_APPEND);
@@ -29,6 +30,6 @@ class EventController extends Controller
 //        dd($xml_obj);
         $xml_arr=(array)$xml_obj;//强制类型转换:obj->array
 //        dd($xml_arr);
-        \Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));
+        \Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));//又写了一个laravel日志，他会不会与别的混了呢
     }
 }
