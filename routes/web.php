@@ -65,8 +65,12 @@ Route::group(['middleware' => ['login']], function () {
 
 });
 
-
-
+///////////////////////自定义菜单
+Route::get('menu','WechatController@menu');
+Route::get('menu_list','WechatController@menuList');
+Route::post('menu/create','WechatController@create_menu');
+Route::get('menu/load','WechatController@load_menu');
+Route::get('menu/del','WechatController@menu_del');
 
 
 

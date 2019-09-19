@@ -315,6 +315,7 @@ class WechatController extends Controller
 //            dd($local_path);
             $file_name=time().rand(100000,999999).'.'.$ext;//随便用rand函数生成一个名字
             $path=request()->file($name)->storeAs('wechat/'.$source_type,$file_name);//storeAs,文件上传时，修改上传的文件名
+//            dd($path);
             $_path='/storage/'.$path;
 //            dd($_path);
             $path = realpath('./storage/'.$path);//realpath() 函数返回绝对路径。
@@ -393,17 +394,17 @@ class WechatController extends Controller
         return view('Wechat.upload');
     }
     public function do_upload(Request $request){
-        $name='image';
+    $name='image';
 //        dd($request->hasFile($name));//这个是false
 //        dd($request->file($name));//如果没有返回null
 //        dd($request->file($name)->isValid());//这个如果没有文件就会报错
-        if(!empty($request->hasFile($name)) && request()->file($name)->isValid()){
-            $path=request()->file('image')->store('goods');
-            dd('/storage/'.$path);
-        }else{
-            echo '嘟嘟';
-        }
+    if(!empty($request->hasFile($name)) && request()->file($name)->isValid()){
+        $path=request()->file('image')->store('goods');
+        dd('/storage/'.$path);
+    }else{
+        echo '嘟嘟';
     }
+}
 
 
     /**
@@ -511,6 +512,178 @@ class WechatController extends Controller
         $result=json_decode($re,1);
         dd($result);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 自定义菜单（最基础原始的发送）
+     */
+    public function menu(Request $request){
+        $url='https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$this->tools->get_access_token();
+        $data=[
+            'button'=>[
+                [
+                    'type'=>'click',
+                    'name'=>'看看谁骚',
+                    'key'=>'dudu'
+                ],
+
+                [
+                    'name'=>'一个菜单',
+                    'sub_button'=>[
+                        [
+                            'type'=>'view',
+                            'name'=>'要不点一下看看',
+                            'url'=>'http://wechat.distantplace.vip/'
+                        ],
+                        [
+                            'type'=>'click',
+                            'name'=>'赶快赞我一下',
+                            'key'=>'dianzan'
+                        ]
+                    ]
+                ]
+
+            ],
+           ];
+        //dd(json_encode($data));
+
+        $res=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+        dd($res);
+        $result=json_decode($res,1);
+        dd($result);
+    }
+
+
+    /***
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 自定义菜单列表
+     */
+
+    public function menuList(){
+        $info=DB::connection('wechat')->table('wechat_menu')->orderBy('name1','desc','name2','desc')->get();
+//        dd($info);
+        return view('Wechat.menuList',['info'=>$info]);
+    }
+
+    /**
+     * 删他么个自定义菜单
+     */
+        public function menu_del(Request $request){
+            $id=$request->all()['id'];
+//            dd($id);
+            $del=DB::connection('wechat')->table('wechat_menu')->where(['id'=>$id])->delete();
+            if(!$del){
+                dd('fail of delete');
+            }
+            //根据表数据翻译成菜单结构
+            $this->load_menu();
+        }
+
+    /***
+     * @param Request $request
+     * 把菜单给他入个库
+     */
+    public function create_menu(Request $request){
+        $req=$request->all();
+//        dd($req);
+        $button_type= !empty($req['name2'])?2:1;
+//        dd($button_type);
+        $result=DB::connection('wechat')->table('wechat_menu')->insert([
+            'name1'=>$req['name1'],
+            'name2'=>$req['name2'],
+            'type'=>$req['type'],
+            'button_type'=>$button_type,
+            'event_value'=>$req['event_value']
+        ]);
+        if(!$result){
+            dd('插入菜单失败');
+        }
+        //根据表数据翻译成菜单结构
+        $this->load_menu();
+    }
+
+    /****
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 从数据库里拿数据然后生成个微信菜单
+     */
+    public function load_menu(){
+        $data=[];
+        $menu_list=DB::connection('wechat')->table('wechat_menu')->select(['name1'])->groupBy('name1')->get();//虽然将整个集合转成数组，但他里面的数据还是对象
+//        dd($menu_info);
+        foreach($menu_list as $vv){
+            $menu_info=DB::connection('wechat')->table('wechat_menu')->where(['name1'=>$vv->name1])->get();
+            //dd($menu_info);//先出来一个一级菜单
+            $menu=[];
+            foreach($menu_info as $v){
+                $menu[]=(array)$v;
+            }
+            $arr=[];
+            foreach($menu as $v){
+                if($v['button_type']==1){ //一级菜单
+                    if($v['type']==1){//click
+                        $arr=[
+                            'type'=>'click',
+                            'name'=>$v['name1'],
+                            'key'=>$v['event_value']
+                        ];
+//                    dd($v['type']);
+                    }elseif($v['type']==2){//view
+                        $arr=[
+                            'type'=>'view',
+                            'name'=>$v['name1'],
+                            'url'=>$v['event_value']
+                        ];
+                    }
+//                    $data['button'][]=$arr;//这里是会加一个button=>[2]
+                }elseif($v['button_type']==2){//二级菜单
+                    $arr['name']=$v['name1'];
+                    if($v['type']==1){//click
+                        $button_arr=[
+                            'type'=>'click',
+                            'name'=>$v['name2'],
+                            'key'=>$v['event_value']
+                        ];
+//                    dd($v['type']);
+                    }elseif($v['type']==2){//view
+                        $button_arr=[
+                            'type'=>'view',
+                            'name'=>$v['name2'],
+                            'url'=>$v['event_value']
+                        ];
+                    }
+                    $arr['sub_button'][]=$button_arr;
+                }
+            }
+        $data['button'][]=$arr;//把$arr都写在了这里面
+        }
+//        dd($data);
+
+//        dd(json_encode($data,JSON_UNESCAPED_UNICODE));//这是全是一级菜单的数据
+
+
+    $url='https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$this->tools->get_access_token();
+    $res=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+    $result=json_decode($res,1);
+    dd($result);
+
+    }
+
+
+
+
 
 
 

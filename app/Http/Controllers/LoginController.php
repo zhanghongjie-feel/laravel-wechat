@@ -14,7 +14,7 @@ class LoginController extends Controller
      * 微信登录
      */
     public function wechat_login(){
-        $redirect_uri='http://www.laravel.com/wechat/code';
+        $redirect_uri=env('APP_URL').'/wechat/code';
         //引导关注着打开这个页面(是否同意授权)
         $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.env('WECHAT_APPID').'&redirect_uri='.urlencode($redirect_uri).'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
         header('Location:'.$url);
