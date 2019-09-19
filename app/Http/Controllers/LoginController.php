@@ -29,7 +29,7 @@ class LoginController extends Controller
         //通过code换取网页授权access_token和openid,userinfo也可以获取openid,snsapi_base不出来"近期已经授权过，自动登录中"
         $result=file_get_contents('https://api.weixin.qq.com/sns/oauth2/access_token?appid='.env('WECHAT_APPID').'&secret='.env('WECHAT_APPSECRET').'&code='.$req['code'].'&grant_type=authorization_code');
         $re=json_decode($result,1);
-        dd($re);
+//        dd($re);
         //拉取用户信息（通过access_token和openid）
             $user_info=file_get_contents('https://api.weixin.qq.com/sns/userinfo?access_token='.$re['access_token'].'&openid='.$re['openid'].'&lang=zh_CN');
             $wechat_user_info=json_decode($user_info,1);

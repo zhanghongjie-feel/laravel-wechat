@@ -683,8 +683,20 @@ class WechatController extends Controller
 
 
 
+    /**
+     * jssdk
+     */
+    public function location(){
+        $url='http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        $jsapi_ticket=$this->tools->get_wechat_jsapi_ticket();
+        $timestamp=time();
+        $noncestr=rand(1000,9999).'suii';
+        $sign_str ='jsapi_ticket='.$jsapi_ticket.'&noncestr='.$noncestr.'&timestamp='.$timestamp.'&url='.$url;//把上边四个ascii码从小到大放进一个字符串
+        $signature=sha1($sign_str);
+        echo $signature;
+        return view('location',['noncestr'=>$noncestr,'signature'=>$signature,'timestamp'=>$timestamp]);
 
-
+    }
 
 
 }

@@ -74,7 +74,8 @@ Route::get('menu/del','WechatController@menu_del');
 
 
 
-
+//////////////////////////jssdk
+Route::get('location','WechatController@location');
 
 
 
