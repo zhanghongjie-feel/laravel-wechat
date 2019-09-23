@@ -1,5 +1,7 @@
 <?php
 Route::get('/php', 'testController@a');
+Route::get('/switch', 'testController@switch');
+Route::get('/while', 'testController@while');
 //Route::get('wechat/get_access_token', 'WechatController@get_access_token');//获取access_token
 Route::get('wechat/get_user_list', 'WechatController@get_user_list');
 Route::get('wechat/get_detailed_info', 'WechatController@get_detailed_info');
@@ -55,6 +57,9 @@ Route::get('agent/create_qrcode','AgentController@create_qrcode');//创建二维
 */
 
 Route::get('/', function () {
+    $yes=strtotime('-1 days');
+    echo date('Y-m-d H:i:s',$yes);
+//    die();
     return view('welcome');
 });
 /////////exam->login
@@ -93,3 +98,29 @@ Route::get('location','WechatController@location');
 
 /////////////////////////////////////////////Secret
 Route::get('secret/user_list','Secret\UserController@userList');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////TEST
+Route::get('test/login','test\TestController@login');
+Route::get('test/wechat_login','test\TestController@wechat_login');
+Route::get('test/code','test\TestController@code');
+Route::get('test/taglist','test\TestController@tagList');
+Route::get('test/add_tag','test\TestController@add_tag');
+Route::post('test/do_add_tag','test\TestController@do_add_tag');
+Route::get('test/get_user_list','test\TestController@get_user_list');
+Route::post('test/add_tag_user','test\TestController@add_tag_user');
+Route::get('test/push_tag_message','test\TestController@push_tag_message');
+Route::post('test/do_push_tag_message','test\TestController@do_push_tag_message');

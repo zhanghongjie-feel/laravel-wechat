@@ -1,5 +1,9 @@
 <?php
 
+
+//$yes=strtotime('-1 days');
+//echo date('Y-m-d H:i:s',$yes);
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

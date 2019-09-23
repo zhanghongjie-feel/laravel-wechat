@@ -11,7 +11,7 @@
 
 <body>
     <center>
-        <form action="{{url('wechat/add_tag_openid')}}" method="post">
+        <form action="{{url('test/add_tag_user')}}" method="post">
             @csrf
             <input type="submit" value="提交">
             <br><br>

@@ -7,16 +7,16 @@
         <title>Laravel</title>
 
         <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
 
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
-                color: #636b6f;
+                background-color: #e0f2f1;
+                color: #9fa8da;
                 font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
+                font-weight: 100;
+                height: 10vh;
                 margin: 0;
             }
 
@@ -45,7 +45,7 @@
             }
 
             .title {
-                font-size: 84px;
+                font-size: 100px;
             }
 
             .links > a {

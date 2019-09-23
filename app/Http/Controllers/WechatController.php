@@ -421,6 +421,11 @@ class WechatController extends Controller
      * 获取用户列表
      */
     public function get_user_list(Request $request){
+        ///////////////////EasyWechat/////////////////////////////////////////
+        $app = app('wechat.official_account');
+        $user_list=$app->user->list($nextOpenId = null);  // $nextOpenId 可选
+        dd($user_list);
+    ///////////////////////////////////////////////////////////////////////////////////
         //--------------------------------------------------我是这么存的
 //        //获取用户openid
 //        $openid="oJMd0wZtgTLURJ3hS1OaiZTd_ZvE";
@@ -479,6 +484,14 @@ class WechatController extends Controller
         return view('Wechat.userInfo');
     }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
     /*
@@ -526,7 +539,7 @@ class WechatController extends Controller
 
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////// 菜    单  ////////////////////////////////////////////////////////
     /**
      * 自定义菜单（最基础原始的发送）
      */
@@ -561,7 +574,7 @@ class WechatController extends Controller
         //dd(json_encode($data));
 
         $res=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
-        dd($res);
+//        dd($res);
         $result=json_decode($res,1);
         dd($result);
     }
@@ -682,7 +695,7 @@ class WechatController extends Controller
     }
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * jssdk
      */
