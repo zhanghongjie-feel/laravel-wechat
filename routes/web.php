@@ -1,4 +1,5 @@
 <?php
+Route::get('send','WechatController@send');
 Route::get('/php', 'testController@a');
 Route::get('/switch', 'testController@switch');
 Route::get('/while', 'testController@while');

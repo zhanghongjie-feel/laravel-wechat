@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
                     'content'=>'嘟嘟~嘟嘟'
                 ]
             ];
-            $tools->curl_post($url,json_encode($data));
+            $tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
         })->everyMinute();
     }
 
