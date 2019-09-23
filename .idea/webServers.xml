@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="01eea855-ee2f-44b4-8e9b-b5f221119dca" name="laravel-wechat" url="http://47.100.211.165">
-        <fileTransfer host="47.100.211.165" port="20" accessType="SFTP">
+      <webServer id="01eea855-ee2f-44b4-8e9b-b5f221119dca" name="laravel-wechat" url="http://wechat.distantplace.vip">
+        <fileTransfer host="47.100.211.165" port="20" rootFolder="/data/wwwroot/default/laravel-wechat/public" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>

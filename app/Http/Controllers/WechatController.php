@@ -714,13 +714,17 @@ class WechatController extends Controller
     public function send(){
         $tools=new Tools();
         $url='https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token='.$tools->get_access_token();
+        $message='hi,今天是'.date('Y-m-d H:i');
+//        dd($message);
         $data=[
             'touser'=>['oJMd0weUXJppG4bt4GaqSKRw9Ct4','oJMd0wXzAhg5HiK7gF7aHfMxi2AQ'],
             'msgtype'=>'text',
             'text'=>[
-                'content'=>'嘟嘟~嘟嘟'
-            ]
+                'content'=>$message
+            ],
+//            'clientmsgid'=>'send_tag_100'
         ];
+//        dd($data);
         $res=$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
         $result=json_decode($res,1);
         dd($result);

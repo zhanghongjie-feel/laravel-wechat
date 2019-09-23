@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tools\Tools;
 use Illuminate\Http\Request;
 use DB;
 
@@ -29,7 +30,7 @@ class EventController extends Controller
         $xml_obj=simplexml_load_string($xml_string,'SimpleXMLElement',LIBXML_NOCDATA);   //他是把xml转成咱们php能识别的对象.LIBXML_NOCDATA,将 CDATA 设置为文本节点(咱接收的xml解析不了cdata,所以直接百度出来这个的东西)，还差第二个参数classname，规定新对象的 class。,根据定义simplexml_load_string() 函数转换形式良好的 XML 字符串为 SimpleXMLElement 对象，应该就是SimpleXMLElement
 //        dd($xml_obj);
         $xml_arr=(array)$xml_obj;//强制类型转换:obj->array
-//        dd($xml_arr);
+        $user_openid=$xml_arr['FromUserName'];//关注你的用户的openid
         \Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));//又写了一个laravel日志，他会不会与别的混了呢
 
         //业务逻辑
@@ -37,6 +38,12 @@ class EventController extends Controller
             if($xml_arr['Event']=='subscribe'){
                 $share_code=explode('_',$xml_arr['EventKey'])[1];
                 $user_openid=$xml_arr['FromUserName'];//粉丝openid
+                ///////////////////////////////////////////////////////////////////获取关注者的名字
+                $tools= new Tools();
+                $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$tools->get_access_token().'&openid='.$user_openid.'&lang=zh_CN');
+                $user_in=json_decode($user_info,1);
+                $user_name=$user_in['nickname'];
+                /////////////////////////////////////////////////////////////////////////////////////
                 //判断是否已经关注过
                 $wechat_openid=DB::connection('wechat')->table('wechat_openid')->where(['openid'=>$user_openid])->first();
                 if(empty($wechat_openid)){
@@ -55,7 +62,7 @@ class EventController extends Controller
 
         }
 
-            $message='欢迎关注';
+        $message='欢迎关注，'.$user_name;
             $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
             echo $xml_str;
 
