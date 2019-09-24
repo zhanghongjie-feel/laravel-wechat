@@ -30,14 +30,19 @@ class EventController extends Controller
         $xml_obj=simplexml_load_string($xml_string,'SimpleXMLElement',LIBXML_NOCDATA);   //他是把xml转成咱们php能识别的对象.LIBXML_NOCDATA,将 CDATA 设置为文本节点(咱接收的xml解析不了cdata,所以直接百度出来这个的东西)，还差第二个参数classname，规定新对象的 class。,根据定义simplexml_load_string() 函数转换形式良好的 XML 字符串为 SimpleXMLElement 对象，应该就是SimpleXMLElement
 //        dd($xml_obj);
         $xml_arr=(array)$xml_obj;//强制类型转换:obj->array
-        $user_openid=$xml_arr['FromUserName'];//关注你的用户的openid
+//        dd($xml_arr);
         \Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));//又写了一个laravel日志，他会不会与别的混了呢
         //业务逻辑
+
+            //$d=date('Y-m-d,H:i:s',$start);今天凌晨时间
+            ///////////////////////////////////////////////////  带参数二维码关注/取关/SCAN 事件  /////////////////////////////////////////////////////////////////////////////////
+
         if($xml_arr['MsgType']=='event'){
+            //////////////////   如 果 收 到 关 注  ,回 复 欢 迎 关 注，然后存一条
             if($xml_arr['Event']=='subscribe'){
                 $share_code=explode('_',$xml_arr['EventKey'])[1];
                 $user_openid=$xml_arr['FromUserName'];//粉丝openid
-                ///////////////////////////////////////////////////////////////////获取关注者的名字
+                ///////////////////////////////////////////////////////////////////根据openid和access_token获取关注者的名字
                 $tools= new Tools();
                 $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$tools->get_access_token().'&openid='.$user_openid.'&lang=zh_CN');
                 $user_in=json_decode($user_info,1);
@@ -51,7 +56,7 @@ class EventController extends Controller
                     ]);
                 }
                 /////////////////////////////////////////////////////////////////////////////////////
-                //判断是否已经关注过
+                //  判 断 是 否 曾 经 关 注 过
                 $wechat_openid=DB::connection('wechat')->table('wechat_openid')->where(['openid'=>$user_openid])->first();
                 if(empty($wechat_openid)){
                     DB::connection('wechat')->table('user')->where(['id'=>$share_code])->increment('share_num',1);
@@ -65,16 +70,73 @@ class EventController extends Controller
                 $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                 echo $xml_str;
             }else{
+                ///////////////////////   event == SCAN
                 //欢迎回来
                 $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
                 echo $xml_str;
             }
-
+                ////    如 若 是 回 复 给 我 们 文 本 消 息
         }elseif($xml_arr['MsgType']=='text'){
             $message='嘤嘤嘤';
             $xml_in='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-            echo $xml_in;
+//            echo $xml_in;
         }
+
+
+        ////////////////////////////////////////////////判 断 是 否 签 到
+//        $time=strtotime('-1 days');//昨天的这个点
+//        $t=date('Y-m-d',$time);//把昨天这个点转成普通时间
+        $openid=$xml_arr['FromUserName'];
+        $u_info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
+        $pre_time=$u_info->add_time;
+//        $d=date('Y-m-d H:i:s',$pre_time);
+        $start=strtotime('0:00:00');
+        if($start<$pre_time){
+            $message='已经签到';
+            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+            echo $xml_str;
+        }elseif($start>$pre_time) {
+            $message = '请签到';
+            $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+            echo $xml_str;
+
+            //   用 户 点 击 签 到（连for循环都用不到）
+//        for($num=0,$score=0;$num<5;$num++){
+//            $score=$score+5;
+//            $num+1;
+//        }
+            $sign_num=$u_info->sign_num;
+            $score=$u_info->score;
+            if($xml_arr['MsgType']=='event'){
+                if($xml_arr['Event']=='CLICK'){
+                    if($xml_arr['EventKey']=='dudu'){
+                        if($sign_num<5){
+                            DB::connection('test')->table('user_info')->update([
+                                'sign_num'=>$sign_num+1
+                            ]);
+                            DB::connection('test')->table('user_info')->update([
+                                'score'=>$score+5
+                            ]);
+
+                        }else{
+                            DB::connection('test')->table('user_info')->update([
+                                'sign_num'=>0
+                            ]);
+                            DB::connection('test')->table('user_info')->update([
+                                'score'=>5
+                            ]);
+                        }
+                    }
+                }
+                $message='签到成功';
+                $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+                echo $xml_sign;
+                dd('成功');
+            }
+
+
+        }
+
 
 
 
