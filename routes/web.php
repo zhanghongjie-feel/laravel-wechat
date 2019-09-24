@@ -125,3 +125,5 @@ Route::get('test/get_user_list','test\TestController@get_user_list');
 Route::post('test/add_tag_user','test\TestController@add_tag_user');
 Route::get('test/push_tag_message','test\TestController@push_tag_message');
 Route::post('test/do_push_tag_message','test\TestController@do_push_tag_message');
+
+Route::get('test/menu','test\SignInController@menu');

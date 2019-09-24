@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
                     'content'=>$message
                 ]
             ];
-            $tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+            //$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
         })->everyMinute();
     }
 

@@ -32,7 +32,6 @@ class EventController extends Controller
         $xml_arr=(array)$xml_obj;//强制类型转换:obj->array
         $user_openid=$xml_arr['FromUserName'];//关注你的用户的openid
         \Log::Info(json_encode($xml_arr,JSON_UNESCAPED_UNICODE));//又写了一个laravel日志，他会不会与别的混了呢
-
         //业务逻辑
         if($xml_arr['MsgType']=='event'){
             if($xml_arr['Event']=='subscribe'){
@@ -43,6 +42,14 @@ class EventController extends Controller
                 $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$tools->get_access_token().'&openid='.$user_openid.'&lang=zh_CN');
                 $user_in=json_decode($user_info,1);
                 $user_name=$user_in['nickname'];
+                $_user=DB::connection('test')->table('user_info')->where(['openid'=>$user_in['openid']])->first();
+                if(empty($_user)){
+                    DB::connection('test')->table('user_info')->insert([
+                        'openid'=>$user_in['openid'],
+                        'nickname'=>$user_name,
+                        'add_time'=>time()
+                    ]);
+                }
                 /////////////////////////////////////////////////////////////////////////////////////
                 //判断是否已经关注过
                 $wechat_openid=DB::connection('wechat')->table('wechat_openid')->where(['openid'=>$user_openid])->first();
@@ -52,6 +59,7 @@ class EventController extends Controller
                         'openid'=>$user_openid,
                         'add_time'=>time()
                     ]);
+
                 }
 
             }else{
@@ -59,12 +67,16 @@ class EventController extends Controller
                 $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
                 echo $xml_str;
             }
-
+        }elseif($xml_arr['MsgType']=='text'){
+            $message='嘤嘤嘤';
+            $xml_in='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+            echo $xml_in;
+            dd();
         }
 
         $message='欢迎关注，'.$user_name;
-            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-            echo $xml_str;
+        $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+        echo $xml_str;
 
 
 
