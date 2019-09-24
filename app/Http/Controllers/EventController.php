@@ -91,14 +91,6 @@ class EventController extends Controller
         $pre_time=$u_info->add_time;
 //        $d=date('Y-m-d H:i:s',$pre_time);
         $start=strtotime('0:00:00');
-        if($start<$pre_time){
-            $message='已经签到';
-            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-            echo $xml_str;
-        }elseif($start>$pre_time) {
-            $message = '请签到';
-            $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
-            echo $xml_str;
 
             //   用 户 点 击 签 到（连for循环都用不到）
 //        for($num=0,$score=0;$num<5;$num++){
@@ -110,28 +102,35 @@ class EventController extends Controller
             if($xml_arr['MsgType']=='event'){
                 if($xml_arr['Event']=='CLICK'){
                     if($xml_arr['EventKey']=='dudu'){
-                        if($sign_num<5){
-                            DB::connection('test')->table('user_info')->update([
-                                'sign_num'=>$sign_num+1
-                            ]);
-                            DB::connection('test')->table('user_info')->update([
-                                'score'=>$score+5
-                            ]);
+                        if($start<$pre_time){
+                            $message='已经签到';
+                            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+                            echo $xml_str;
+                        }elseif($start>$pre_time) {
+                            $message = '请签到';
+                            $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+                            echo $xml_str;
+                            if($sign_num<5){
+                                DB::connection('test')->table('user_info')->update([
+                                    'sign_num'=>$sign_num+1
+                                ]);
+                                DB::connection('test')->table('user_info')->update([
+                                    'score'=>$score+5
+                                ]);
 
-                        }else{
-                            DB::connection('test')->table('user_info')->update([
-                                'sign_num'=>0
-                            ]);
-                            DB::connection('test')->table('user_info')->update([
-                                'score'=>5
-                            ]);
+                            }else{
+                                DB::connection('test')->table('user_info')->update([
+                                    'sign_num'=>0
+                                ]);
+                                DB::connection('test')->table('user_info')->update([
+                                    'score'=>5
+                                ]);
+                            }
                         }
                     }
-                }
                 $message='签到成功';
                 $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                 echo $xml_sign;
-                dd('成功');
             }
 
 
