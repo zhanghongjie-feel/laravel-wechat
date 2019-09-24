@@ -87,9 +87,10 @@ class EventController extends Controller
 //        $t=date('Y-m-d',$time);//把昨天这个点转成普通时间
         $openid=$xml_arr['FromUserName'];
         $u_info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
-        $pre_time=$u_info->add_time;
+        $pre_time=$u_info->signin;
 //        $d=date('Y-m-d H:i:s',$pre_time);
         $start=strtotime('0:00:00');//今天的0：00
+//          dd($start);
 
             //   用 户 点 击 签 到（连for循环都用不到）
 //        for($num=0,$score=0;$num<5;$num++){
@@ -116,13 +117,18 @@ class EventController extends Controller
                                 DB::connection('test')->table('user_info')->update([
                                     'score'=>$score+5
                                 ]);
-
+                                DB::connection('test')->table('user_info')->update([
+                                    'signin'=>time()
+                                ]);
                             }else{
                                 DB::connection('test')->table('user_info')->update([
                                     'sign_num'=>0
                                 ]);
                                 DB::connection('test')->table('user_info')->update([
                                     'score'=>5
+                                ]);
+                                DB::connection('test')->table('user_info')->update([
+                                    'signin'=>time()
                                 ]);
                             }
                             $message='签到成功';
@@ -134,6 +140,7 @@ class EventController extends Controller
                         $info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
                         $score=$info->score;
                         $message='你的积分为'.$score;
+                        dd($message);
                         $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                         echo $xml_sign;
                     }
