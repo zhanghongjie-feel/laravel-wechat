@@ -151,7 +151,6 @@ class EventController extends Controller
                                 ]);
                             }
                             $message='签到成功';
-                            dd($message);
                             $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                             echo $xml_sign;
                         }
@@ -164,10 +163,7 @@ class EventController extends Controller
                         echo $xml_sign;
                     }
                 }
-              if($xml_arr['MsgType']=='event')  {
-                    dd('deidei');
 
-              }
 
 
         }
