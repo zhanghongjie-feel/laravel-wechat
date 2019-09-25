@@ -30,18 +30,21 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->call(function(){
             $tools=new Tools();
-            \Log::Info('执行了任务调度-推送消息');
-            $url='https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token='.$tools->get_access_token();
-           //根据openid列表群发
-           $message='hi,今天是：'.date('Y-m-d H:i');
-//           dd($message);
-            $data=[
-                'touser'=>['oJMd0weUXJppG4bt4GaqSKRw9Ct4','oJMd0wXzAhg5HiK7gF7aHfMxi2AQ'],
-                'msgtype'=>'text',
-                'text'=>[
-                    'content'=>$message
-                ]
-            ];
+            \Log::Info('执行了任务调度-推送签到模板');
+            $u_info=DB::connection('test')->table('user_info')->get();
+            $sign_num=$u_info->sign_num;
+            $score=$u_info->score;
+//            $url='https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token='.$tools->get_access_token();
+//           //根据openid列表群发
+//           $message='hi,今天是：'.date('Y-m-d H:i');
+////           dd($message);
+//            $data=[
+//                'touser'=>['oJMd0weUXJppG4bt4GaqSKRw9Ct4','oJMd0wXzAhg5HiK7gF7aHfMxi2AQ'],
+//                'msgtype'=>'text',
+//                'text'=>[
+//                    'content'=>$message
+//                ]
+//            ];
             //$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
         })->everyMinute();
     }

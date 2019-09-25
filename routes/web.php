@@ -127,3 +127,4 @@ Route::get('test/push_tag_message','test\TestController@push_tag_message');
 Route::post('test/do_push_tag_message','test\TestController@do_push_tag_message');
 
 Route::get('test/menu','test\SignInController@menu');
+Route::get('test/send','test\SignInController@send_message');

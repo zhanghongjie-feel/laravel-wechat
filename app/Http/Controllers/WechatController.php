@@ -506,7 +506,7 @@ class WechatController extends Controller
             'url'=>'www.laravel.com',
             'data'=>[
                 'first'=>[
-                    'value'=>'阿伟',
+                    'value'=>'签到提醒',
                     'color'=>''
                 ],
                 'keyword1'=>[

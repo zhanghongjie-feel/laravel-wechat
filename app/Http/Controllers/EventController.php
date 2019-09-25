@@ -35,6 +35,18 @@ class EventController extends Controller
         //业务逻辑
 
             //$d=date('Y-m-d,H:i:s',$start);今天凌晨时间
+
+        /////判 断 是 否 应 该 签 到
+        $openid=$xml_arr['FromUserName'];
+        $u_info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
+        if(empty($u_info)){
+            //根据openid和access-token拿到信息，存入table
+        }
+        $pre_time=$u_info->signin;
+//        $d=date('Y-m-d H:i:s',$pre_time);
+//        $start=strtotime('0:00:00');//今天的0：00
+//          dd($start);
+        $today=date('Y-m-d',time());
             ///////////////////////////////////////////////////  带参数二维码关注/取关/SCAN 事件  /////////////////////////////////////////////////////////////////////////////////
 
         if($xml_arr['MsgType']=='event' && $xml_arr['Event']=='subscribe') {
@@ -54,6 +66,7 @@ class EventController extends Controller
                     'add_time' => time()
                 ]);
             }
+
             /////////////////////////////////////////////////////////////////////////////////////
             //  判 断 是 否 曾 经 关 注 过
             $wechat_openid = DB::connection('wechat')->table('wechat_openid')->where(['openid' => $user_openid])->first();
@@ -68,29 +81,38 @@ class EventController extends Controller
             $message = '欢迎关注，' . $user_name;
             $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
             echo $xml_str;
-        }elseif($xml_arr['MsgType']=='event' && $xml_arr['Event']=='SCAN'){
-                ///////////////////////   event == SCAN
+        }elseif($xml_arr['MsgType']=='event'){
+            if($xml_arr['Event']=='SCAN') {
                 //欢迎回来
-                $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
+                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
                 echo $xml_str;
+            }elseif($xml_arr['Event']=='SCAN' && $today!==$pre_time)   {
+                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
+                echo $xml_str;
+                $message = '请签到';
+                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+                echo $xml_str;
+            }
+
+
+
 
                 ////    如 若 是 回 复 给 我 们 文 本 消 息
         }elseif($xml_arr['MsgType']=='text'){
-            $message='嘤嘤嘤';
-            $xml_in='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-            echo $xml_in;
+                $message = '嘤嘤嘤';
+                $xml_in = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+                echo $xml_in;
         }
+
+
+
+
 
 
         ////////////////////////////////////////////////判 断 是 否 签 到
 //        $time=strtotime('-1 days');//昨天的这个点
 //        $t=date('Y-m-d',$time);//把昨天这个点转成普通时间
-        $openid=$xml_arr['FromUserName'];
-        $u_info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
-        $pre_time=$u_info->signin;
-//        $d=date('Y-m-d H:i:s',$pre_time);
-        $start=strtotime('0:00:00');//今天的0：00
-//          dd($start);
+
 
             //   用 户 点 击 签 到（连for循环都用不到）
 //        for($num=0,$score=0;$num<5;$num++){
@@ -102,50 +124,50 @@ class EventController extends Controller
             if($xml_arr['MsgType']=='event'){
                 if($xml_arr['Event']=='CLICK'){
                     if($xml_arr['EventKey']=='dudu'){
-                        if($start<$pre_time){
-                            $message='已经签到';
+                        if($today==$pre_time){
+                            $message='已签到';
                             $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                             echo $xml_str;
-                        }elseif($start>$pre_time) {
-                            $message = '请签到';
-                            $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
-                            echo $xml_str;
+                        }elseif($today!==$pre_time) {
                             if($sign_num<5){
-                                DB::connection('test')->table('user_info')->update([
+                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
                                     'sign_num'=>$sign_num+1
                                 ]);
-                                DB::connection('test')->table('user_info')->update([
+                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
                                     'score'=>$score+5
                                 ]);
-                                DB::connection('test')->table('user_info')->update([
-                                    'signin'=>time()
+                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+                                    'signin'=>date('Y-m-d',time())
                                 ]);
                             }else{
-                                DB::connection('test')->table('user_info')->update([
+                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
                                     'sign_num'=>0
                                 ]);
-                                DB::connection('test')->table('user_info')->update([
+                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
                                     'score'=>5
                                 ]);
-                                DB::connection('test')->table('user_info')->update([
-                                    'signin'=>time()
+                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+                                    'signin'=>date('Y-m-d',time())
                                 ]);
                             }
                             $message='签到成功';
+                            dd($message);
                             $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                             echo $xml_sign;
                         }
-
+                        ////// 让 用 户 查 看 当前积分
                     }elseif($xml_arr['EventKey']=='duduo'){
                         $info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
                         $score=$info->score;
                         $message='你的积分为'.$score;
-                        dd($message);
                         $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
                         echo $xml_sign;
                     }
+                }
+              if($xml_arr['MsgType']=='event')  {
+                    dd('deidei');
 
-            }
+              }
 
 
         }
