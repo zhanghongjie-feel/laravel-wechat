@@ -66,7 +66,7 @@ class SignInController extends Controller
                            'value'=>'积分是'.$u_info[$k]->score
                        ],
                        'remark'=>[
-                           'value'=>'祝你快乐每一天',
+                           'value'=>'赶紧签到',
                            'color'=>''
                        ]
                    ]
@@ -90,8 +90,8 @@ class SignInController extends Controller
                            'value'=>'积分是'.$u_info[$k]->score
                        ],
                        'remark'=>[
-                           'value'=>'假期快乐',
-                           'color'=>''
+                           'value'=>'',
+                           'color'=>'哈喽艾瑞巴蒂'
                        ]
                    ]
                ];
