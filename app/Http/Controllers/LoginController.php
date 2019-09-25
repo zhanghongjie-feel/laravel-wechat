@@ -44,7 +44,7 @@ class LoginController extends Controller
             echo '欧了';
         }else{
             //先注册，后登录
-            DB::connection('wechat')->beginTransaction();//打开事务
+            DB::connection('wechat')->beginTransaction();//打开事务  数据库数据处理
             $uid=DB::connection('wechat')->table('user_info')->insertGetId([
                 'name'=>$wechat_user_info['nickname'],
                'password'=>'',

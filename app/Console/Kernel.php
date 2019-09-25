@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel
 //                ]
 //            ];
             //$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
-        })->everyday();
+        })->dailyAt('8:00');
     }
 
     /**
