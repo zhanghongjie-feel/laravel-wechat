@@ -27,7 +27,7 @@ class login
         if(!$result){
             dd('请先登录');
         }
-//        $request->session()->put(['uid'=>$request->session()->all()['uid']]);//这是自己设置的uid
+//        $request->session()->put(['uid'=>111]);//这是自己设置的uid
         $response = $next($request);
 
         //后置

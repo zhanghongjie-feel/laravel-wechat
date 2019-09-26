@@ -99,7 +99,6 @@ class TestController extends Controller
 
     public function get_user_list(Request $request){
         $req=$request->all();
-//        dd($req);
         $user_info=DB::connection('wechat')->table('user_info')->get();
 //        dd($user_info);
         return view('Wechat.userList',['info'=>$user_info,'tagid'=>$req['tagid']]);
@@ -107,7 +106,6 @@ class TestController extends Controller
 
     public function add_tag_user(Request $request){
         $req=$request->all();
-//dd($req);
         $url='https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token='.$this->tools->get_access_token();
         $data=[
             'openid_list'=>$req['openid_list'],

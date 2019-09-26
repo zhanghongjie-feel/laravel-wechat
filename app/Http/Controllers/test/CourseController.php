@@ -43,7 +43,7 @@ class CourseController extends Controller
     }
 
     public function admin(Request $request){
-
+//    dd($request->session()->all());
         $uid=$request->session()->all()['uid'];
         $info=DB::connection('wechat')->table('user_wechat')->where(['uid'=>$uid])->first();
         return view('Test.admin',['info'=>$info]);
@@ -61,6 +61,42 @@ class CourseController extends Controller
         if($res){
             return redirect('course/admin');
         }
+    }
+
+    public function send(){
+        $tools=new Tools();
+        $openid=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$tools->get_access_token().'&next_openid=');
+        $res=json_decode($openid,1);
+        $openid_list=$res['data']['openid'];
+//        dd($openid_list);
+        foreach($openid_list as $k=>$v){
+            $url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$this->tools->get_access_token();
+            $data=[
+                'touser'=>$v,
+                'template_id'=>'gDsIyl1h_elVHIzk_V2txsZhno_jspfhZwISvAbukEY',
+                'url'=>'www.laravel.com',
+                'data'=>[
+                    'first'=>[
+                        'value'=>'我丢',
+                        'color'=>''
+                    ],
+                    'keyword1'=>[
+                        'value'=>'没事'
+                    ],
+                    'keyword2'=>[
+                        'value'=>'我就发个玩玩'
+                    ],
+                    'remark'=>[
+                        'value'=>'喝喽，艾瑞巴蒂',
+                        'color'=>''
+                    ]
+                ]
+            ];
+            $re=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+        }
+
+        $result=json_decode($re,1);
+        dd($result);
     }
 
 }

@@ -31,6 +31,37 @@ class Kernel extends ConsoleKernel
         $schedule->call(function(){
             $tools=new Tools();
             \Log::Info('执行了任务调度-推送签到模板');
+            //在linux中写一个定时任务，每天晚上8点，发送一个模板消息给学生，写的课程
+            //1.查出所有openid
+            $openid=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$tools->get_access_token().'&next_openid=');
+            $res=json_decode($openid,1);
+            $openid_list=$res['data']['openid'];
+//        dd($openid_list);
+            foreach($openid_list as $k=>$v){
+                $url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$this->tools->get_access_token();
+                $data=[
+                    'touser'=>$v,
+                    'template_id'=>'gDsIyl1h_elVHIzk_V2txsZhno_jspfhZwISvAbukEY',
+                    'url'=>'www.laravel.com',
+                    'data'=>[
+                        'first'=>[
+                            'value'=>'我丢',
+                            'color'=>''
+                        ],
+                        'keyword1'=>[
+                            'value'=>'没事'
+                        ],
+                        'keyword2'=>[
+                            'value'=>'我就发个玩玩'
+                        ],
+                        'remark'=>[
+                            'value'=>'喝喽，艾瑞巴蒂',
+                            'color'=>''
+                        ]
+                    ]
+                ];
+                $re=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+            }
 
             ///////////  签    到  之任务调度（判断是否签到，然后群发wechat-test->user_info）
 //            $u_info=DB::connection('test')->table('user_info')->get()->toArray();
