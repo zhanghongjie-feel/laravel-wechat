@@ -22,7 +22,7 @@ class login
 //        if($result==false){
 //            dd('请先登录');
 //        }
-        $request->session()->put(['uid'=>16]);
+//        $request->session()->put(['uid'=>16]);//线下自己写的
         $result=$request->session()->has('uid');
         if(!$result){
             dd('请先登录');
