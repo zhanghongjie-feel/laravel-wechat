@@ -22,8 +22,12 @@ class login
 //        if($result==false){
 //            dd('请先登录');
 //        }
-
-
+        $request->session()->put(['uid'=>16]);
+        $result=$request->session()->has('uid');
+        if(!$result){
+            dd('请先登录');
+        }
+//        $request->session()->put(['uid'=>$request->session()->all()['uid']]);//这是自己设置的uid
         $response = $next($request);
 
         //后置

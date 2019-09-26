@@ -706,7 +706,7 @@ class WechatController extends Controller
         $noncestr=rand(1000,9999).'suii';
         $sign_str ='jsapi_ticket='.$jsapi_ticket.'&noncestr='.$noncestr.'&timestamp='.$timestamp.'&url='.$url;//把上边四个ascii码从小到大放进一个字符串
         $signature=sha1($sign_str);
-        echo $signature;
+        echo $signature;//嘿嘿，签名出来了
         return view('location',['noncestr'=>$noncestr,'signature'=>$signature,'timestamp'=>$timestamp]);
 
     }

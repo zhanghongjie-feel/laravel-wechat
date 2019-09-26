@@ -40,7 +40,7 @@ class LoginController extends Controller
         if(!empty($wechat_info)){
             //存在，登录
             $request->session()->put('uid',$wechat_info->uid);
-
+                    return redirect('course/admin');//注意。这个地方根据你的判断来写web
             echo '欧了';
         }else{
             //先注册，后登录
@@ -56,6 +56,7 @@ class LoginController extends Controller
             ]);
             //登录操作
             $request->session()->put('uid',$uid);
+                    return redirect('course/admin');
             echo '你是先注册了然后登录';
         }
     }

@@ -65,6 +65,10 @@ Route::get('/', function () {
 });
 /////////exam->login
 Route::group(['middleware' => ['login']], function () {
+    //选课系统
+    Route::get('course/admin','test\CourseController@admin');
+    Route::get('course/create','test\CourseController@admin_create');
+
     Route::post('exam/openid_list','ExamController@openid_list');
     Route::get('exam/liuyan','ExamController@liuyan');
     Route::post('exam/do_liuyan','ExamController@do_liuyan');
@@ -126,5 +130,8 @@ Route::post('test/add_tag_user','test\TestController@add_tag_user');
 Route::get('test/push_tag_message','test\TestController@push_tag_message');
 Route::post('test/do_push_tag_message','test\TestController@do_push_tag_message');
 
+//8月  技能B卷
 Route::get('test/menu','test\SignInController@menu');
 Route::get('test/send','test\SignInController@send_message');
+///////////8月 技能 A卷
+Route::get('course/menu','test\CourseController@menu');
