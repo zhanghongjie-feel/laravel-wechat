@@ -151,7 +151,7 @@ class EventController extends Controller
                                 ]);
                             }else{
                                 DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'sign_num'=>0
+                                    'sign_num'=>1
                                 ]);
                                 DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
                                     'score'=>5
