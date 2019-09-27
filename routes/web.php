@@ -108,6 +108,7 @@ Route::get('secret/user_list','Secret\UserController@userList');
 
 
 Route::get('course/send','test\CourseController@send');
+Route::get('course/ol','test\CourseController@ol');
 
 
 

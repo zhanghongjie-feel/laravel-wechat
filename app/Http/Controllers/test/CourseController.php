@@ -74,7 +74,7 @@ class CourseController extends Controller
             $data=[
                 'touser'=>$v,
                 'template_id'=>'gDsIyl1h_elVHIzk_V2txsZhno_jspfhZwISvAbukEY',
-                'url'=>'www.laravel.com',
+                'url'=>'wechat.distantplace.vip',
                 'data'=>[
                     'first'=>[
                         'value'=>'我丢',
@@ -98,5 +98,27 @@ class CourseController extends Controller
         $result=json_decode($re,1);
         dd($result);
     }
+
+            public function ol(){
+                $tools=new Tools();
+                $openid=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$tools->get_access_token().'&next_openid=');
+                $res=json_decode($openid,1);
+                $openid_list=$res['data']['openid'];
+                $url='https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token='.$tools->get_access_token();
+//        dd($message);
+                $data=[
+                    'touser'=>$openid_list,
+                    'msgtype'=>'text',
+                    'text'=>[
+                        'content'=>'嘟嘟！'
+                    ],
+//            'clientmsgid'=>'send_tag_100'
+                ];
+//        dd($data);
+                $res=$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+                $result=json_decode($res,1);
+                dd($result);
+
+            }
 
 }
