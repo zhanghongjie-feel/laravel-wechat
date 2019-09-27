@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
                 $data=[
                     'touser'=>$v,
                     'template_id'=>'gDsIyl1h_elVHIzk_V2txsZhno_jspfhZwISvAbukEY',
-                    'url'=>'www.laravel.com',
+                    'url'=>'wechat.distantplace.vip',
                     'data'=>[
                         'first'=>[
                             'value'=>'我丢',
@@ -135,7 +135,7 @@ class Kernel extends ConsoleKernel
 //                ]
 //            ];
             //$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
-        })->dailyAt('8:00');
+        })->everyMinute();
     }
 
     /**
