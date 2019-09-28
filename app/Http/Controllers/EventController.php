@@ -18,7 +18,9 @@ class EventController extends Controller
 //        echo $_GET['echostr'];//这个玩意是在第一次设置接口配置信息时需要在url里echo一下？echostr=111以表示微信返回给开发者的接口可以用
         $xml_string=file_get_contents('php://input');//微信返回的格式是xml字符串，用它来获取到
 //        dd($xml_string);
-        $wechat_log_path=storage_path('logs/wechat/'.date('Y-m-d').'.log');
+//        $wechat_log_path=storage_path('logs/wechat/'.date('Y-m-d').'.log');
+        $wechat_log_path=storage_path('logs/wx.log');
+
         file_put_contents($wechat_log_path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",FILE_APPEND);
         file_put_contents($wechat_log_path,$xml_string,FILE_APPEND);
         file_put_contents($wechat_log_path,"\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n",FILE_APPEND);
@@ -47,74 +49,99 @@ class EventController extends Controller
 //        $start=strtotime('0:00:00');//今天的0：00
 //          dd($start);
         $today=date('Y-m-d',time());
-            ///////////////////////////////////////////////////  带参数二维码关注/取关/SCAN 事件  /////////////////////////////////////////////////////////////////////////////////
-
-        if($xml_arr['MsgType']=='event' && $xml_arr['Event']=='subscribe') {
-            ///////////////////////////////////////////////////////////////////根据openid和access_token获取关注者的名字
 
 
-//            if(empty($xml_arr['EventKey'])){
-//                $message = '欢迎关注，' . $user_name;
-//                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
-//                echo $xml_str;
-//                dd();
-//            }
-            //////////////////   如 果 收 到 关 注  ,回 复 欢 迎 关 注，然后存一条
-            $share_code = explode('_', $xml_arr['EventKey']);
-            dd($xml_arr['EventKey']);
-            $user_openid = $xml_arr['FromUserName'];//粉丝openid
-            $tools = new Tools();
-            $user_info = file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $tools->get_access_token() . '&openid=' . $user_openid . '&lang=zh_CN');
-            $user_in = json_decode($user_info, 1);
-            $user_name = $user_in['nickname'];
-            $_user = DB::connection('test')->table('user_info')->where(['openid' => $user_in['openid']])->first();
-            if (empty($_user)) {
-                DB::connection('test')->table('user_info')->insert([
-                    'openid' => $user_in['openid'],
-                    'nickname' => $user_name,
-                    'add_time' => time()
+        $tools = new Tools();
+        if($xml_arr['MsgType']=='event' && $xml_arr['Event']=='subscribe'){
+            $wx_info=DB::connection('wechat')->table('user_weixin')->where(['openid'=>$openid])->first();
+            $user_info=file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$tools->get_access_token().'&openid='.$openid.'&lang=zh_CN');
+            $u_info=json_decode($user_info,1);
+            $name=$u_info['nickname'];
+//            dd($info);
+            if(!$wx_info){
+                DB::connection('wechat')->table('user_weixin')->insert([
+                    'openid'=>$openid,
+                    'nickname'=>$u_info['nickname'],
+                    'city'=>$u_info['city'],
+                    'country'=>$u_info['country'],
+                    'add_time'=>time()
                 ]);
-            }
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            //  判 断 是 否 曾 经 关 注 过
-            $wechat_openid = DB::connection('wechat')->table('wechat_openid')->where(['openid' => $user_openid])->first();
-            if (empty($wechat_openid)) {
-                DB::connection('wechat')->table('user')->where(['id' => $share_code])->increment('share_num', 1);
-                DB::connection('wechat')->table('wechat_openid')->insert([
-                    'openid' => $user_openid,
-                    'add_time' => time()
-                ]);
-
-            }
-            ///欢迎关注一下子
-            $message = '欢迎关注，' . $user_name;
-            $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
-            echo $xml_str;
-        }elseif($xml_arr['MsgType']=='event'){
-            if($xml_arr['Event']=='SCAN') {
-                //欢迎回来
-                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
+                $message = '您好，' . $name.'。当前时间为：'.date('Y-m-d H:i:s',time());
+                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
                 echo $xml_str;
-            }elseif($xml_arr['Event']=='SCAN' && $today!==$pre_time)   {
-//                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
-//                echo $xml_str;
-                $message = '请签到';
+            }elseif($wx_info){
+                $message = '欢迎回来，' . $name.'。当前时间为：'.date('Y-m-d H:i:s',time());
                 $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
                 echo $xml_str;
             }
+        }
+            ///////////////////////////////////////////////////  带参数二维码关注/取关/SCAN 事件  /////////////////////////////////////////////////////////////////////////////////
+//——————————————————————————————————————————————————————————————————————————————————————
+//        if($xml_arr['MsgType']=='event' && $xml_arr['Event']=='subscribe') {
+//            ///////////////////////////////////////////////////////////////////根据openid和access_token获取关注者的名字
+//
+//
+////            if(empty($xml_arr['EventKey'])){
+////                $message = '欢迎关注，' . $user_name;
+////                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+////                echo $xml_str;
+////                dd();
+////            }
+//            //////////////////   如 果 收 到 关 注  ,回 复 欢 迎 关 注，然后存一条
+//            $share_code = explode('_', $xml_arr['EventKey']);
+//            $user_openid = $xml_arr['FromUserName'];//粉丝openid
+//            $tools = new Tools();
+//            $user_info = file_get_contents('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $tools->get_access_token() . '&openid=' . $user_openid . '&lang=zh_CN');
+//            $user_in = json_decode($user_info, 1);
+//            $user_name = $user_in['nickname'];
+//            $_user = DB::connection('test')->table('user_info')->where(['openid' => $user_in['openid']])->first();
+//            if (empty($_user)) {
+//                DB::connection('test')->table('user_info')->insert([
+//                    'openid' => $user_in['openid'],
+//                    'nickname' => $user_name,
+//                    'add_time' => time()
+//                ]);
+//            }
+//
+//            /////////////////////////////////////////////////////////////////////////////////////
+//            //  判 断 是 否 曾 经 关 注 过
+//            $wechat_openid = DB::connection('wechat')->table('wechat_openid')->where(['openid' => $user_openid])->first();
+//            if (empty($wechat_openid)) {
+//                DB::connection('wechat')->table('user')->where(['id' => $share_code])->increment('share_num', 1);
+//                DB::connection('wechat')->table('wechat_openid')->insert([
+//                    'openid' => $user_openid,
+//                    'add_time' => time()
+//                ]);
+//
+//            }
+//            ///欢迎关注一下子
+//            $message = '欢迎关注，' . $user_name;
+//            $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+//            echo $xml_str;
+//        }elseif($xml_arr['MsgType']=='event'){
+//            if($xml_arr['Event']=='SCAN') {
+//                //欢迎回来
+//                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
+//                echo $xml_str;
+//            }elseif($xml_arr['Event']=='SCAN' && $today!==$pre_time)   {
+////                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎回来]]></Content></xml>';
+////                echo $xml_str;
+//                $message = '请签到';
+//                $xml_str = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+//                echo $xml_str;
+//            }
 
 
 
 
                 ////    如 若 是 回 复 给 我 们 文 本 消 息
-        }elseif($xml_arr['MsgType']=='text'){
-                $message = '嘤嘤嘤';
-                $xml_in = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
-                echo $xml_in;
-        }
+//        }elseif($xml_arr['MsgType']=='text'){
+//                $message = '嘤嘤嘤';
+//                $xml_in = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+//                echo $xml_in;
+//        }
 
-
+//————————————————————————————————————————————————————————————————————————————————————
         /////////////////////////////////判断时间修改课程   Route::get('course/admin','test\CourseController@admin');
 
 
@@ -129,54 +156,57 @@ class EventController extends Controller
 //            $score=$score+5;
 //            $num+1;
 //        }
-            $sign_num=$u_info->sign_num;
-            $score=$u_info->score;
-            if($xml_arr['MsgType']=='event'){
-                if($xml_arr['Event']=='CLICK'){
-                    if($xml_arr['EventKey']=='dudu'){
-                        if($today==$pre_time){
-                            $message='已签到';
-                            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                            echo $xml_str;
-                        }elseif($today!==$pre_time) {
-                            if($sign_num<5){
-                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'sign_num'=>$sign_num+1
-                                ]);
-                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'score'=>$score+5
-                                ]);
-                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'signin'=>date('Y-m-d',time())
-                                ]);
-                            }else{
-                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'sign_num'=>1
-                                ]);
-                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'score'=>5
-                                ]);
-                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
-                                    'signin'=>date('Y-m-d',time())
-                                ]);
-                            }
-                            $message='签到成功';
-                            $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                            echo $xml_sign;
-                        }
-                        ////// 让 用 户 查 看 当前积分
-                    }elseif($xml_arr['EventKey']=='duduo'){
-                        $info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
-                        $score=$info->score;
-                        $message='你的积分为'.$score;
-                        $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                        echo $xml_sign;
-                    }
-                }
 
-
-
-        }
+              //  签到操作
+        //——————————————————————————————————————————————————————————————————————————-
+//            $sign_num=$u_info->sign_num;
+//            $score=$u_info->score;
+//            if($xml_arr['MsgType']=='event'){
+//                if($xml_arr['Event']=='CLICK'){
+//                    if($xml_arr['EventKey']=='dudu'){
+//                        if($today==$pre_time){
+//                            $message='已签到';
+//                            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+//                            echo $xml_str;
+//                        }elseif($today!==$pre_time) {
+//                            if($sign_num<5){
+//                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+//                                    'sign_num'=>$sign_num+1
+//                                ]);
+//                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+//                                    'score'=>$score+5
+//                                ]);
+//                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+//                                    'signin'=>date('Y-m-d',time())
+//                                ]);
+//                            }else{
+//                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+//                                    'sign_num'=>1
+//                                ]);
+//                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+//                                    'score'=>5
+//                                ]);
+//                                DB::connection('test')->table('user_info')->where(['openid'=>$openid])->update([
+//                                    'signin'=>date('Y-m-d',time())
+//                                ]);
+//                            }
+//                            $message='签到成功';
+//                            $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+//                            echo $xml_sign;
+//                        }
+//                        ////// 让 用 户 查 看 当前积分
+//                    }elseif($xml_arr['EventKey']=='duduo'){
+//                        $info=DB::connection('test')->table('user_info')->where(['openid'=>$openid])->first();
+//                        $score=$info->score;
+//                        $message='你的积分为'.$score;
+//                        $xml_sign='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+//                        echo $xml_sign;
+//                    }
+//                }
+//
+//
+//
+//        }
 
 
 
