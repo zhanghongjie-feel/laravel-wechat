@@ -147,15 +147,15 @@ class EventController extends Controller
 
 
         //////////////////////////////////////////////判 断 是 否 签 到
-        $time=strtotime('-1 days');//昨天的这个点
-        $t=date('Y-m-d',$time);//把昨天这个点转成普通时间
+//        $time=strtotime('-1 days');//昨天的这个点
+//        $t=date('Y-m-d',$time);//把昨天这个点转成普通时间
 
 
              //  用 户 点 击 签 到（连for循环都用不到）
-        for($num=0,$score=0;$num<5;$num++){
-            $score=$score+5;
-            $num+1;
-        }
+//        for($num=0,$score=0;$num<5;$num++){
+//            $score=$score+5;
+//            $num+1;
+//        }
 
         //        签到操作
       //——————————————————————————————————————————————————————————————————————————-
@@ -164,9 +164,9 @@ class EventController extends Controller
             if($xml_arr['MsgType']=='event'){
                 if($xml_arr['Event']=='CLICK'){
                     if($xml_arr['EventKey']=='dudu'){
-        $message = '嘤嘤嘤';
-                $xml_in = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
-                echo $xml_in;
+//                $message = '嘤嘤嘤';
+//                $xml_in = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+//                echo $xml_in;
                         if($today==$pre_time){
                             $message='已签到';
                             $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
