@@ -18,8 +18,8 @@ class EventController extends Controller
 //        echo $_GET['echostr'];//这个玩意是在第一次设置接口配置信息时需要在url里echo一下？echostr=111以表示微信返回给开发者的接口可以用
         $xml_string=file_get_contents('php://input');//微信返回的格式是xml字符串，用它来获取到
 //        dd($xml_string);
-//        $wechat_log_path=storage_path('logs/wechat/'.date('Y-m-d').'.log');
-        $wechat_log_path=storage_path('logs/wx.log');
+        $wechat_log_path=storage_path('logs/wechat/'.date('Y-m-d').'.log');
+//        $wechat_log_path=storage_path('logs/wx.log');
 
         file_put_contents($wechat_log_path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",FILE_APPEND);
         file_put_contents($wechat_log_path,$xml_string,FILE_APPEND);
@@ -164,6 +164,9 @@ class EventController extends Controller
 //            if($xml_arr['MsgType']=='event'){
 //                if($xml_arr['Event']=='CLICK'){
 //                    if($xml_arr['EventKey']=='dudu'){
+        //$message = '嘤嘤嘤';
+//                $xml_in = '<xml><ToUserName><![CDATA[' . $xml_arr['FromUserName'] . ']]></ToUserName><FromUserName><![CDATA[' . $xml_arr['ToUserName'] . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . $message . ']]></Content></xml>';
+//                echo $xml_in;
 //                        if($today==$pre_time){
 //                            $message='已签到';
 //                            $xml_str='<xml><ToUserName><![CDATA['.$xml_arr['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml_arr['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
