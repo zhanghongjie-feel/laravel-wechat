@@ -549,12 +549,12 @@ class WechatController extends Controller
             'button'=>[
                 [
                     'type'=>'click',
-                    'name'=>'看看谁骚',
+                    'name'=>'功能1',
                     'key'=>'dudu'
                 ],
 
                 [
-                    'name'=>'一个菜单',
+                    'name'=>'功能2',
                     'sub_button'=>[
                         [
                             'type'=>'view',
@@ -567,8 +567,13 @@ class WechatController extends Controller
                             'key'=>'dianzan'
                         ]
                     ]
-                ]
+                ],
 
+                [
+                    'type'=>'view',
+                    'name'=>'绑定账号',
+                    'url'=>'http://wechat.distantplace.vip/admin/bangding/'
+                ],
             ],
            ];
         //dd(json_encode($data));

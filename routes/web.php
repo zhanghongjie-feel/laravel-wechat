@@ -136,3 +136,13 @@ Route::get('test/menu','test\SignInController@menu');
 Route::get('test/send','test\SignInController@send_message');
 ///////////8月 技能 A卷
 Route::get('course/menu','test\CourseController@menu');
+
+
+
+//——————————————————————九月
+Route::get('admin/login','Admin\LoginController@login');
+Route::get('admin/index','Admin\AdminController@index');
+Route::get('admin/bangding','Admin\AdminController@bangding');
+Route::post('admin/do_bangding','Admin\AdminController@do_bangding');
+Route::get('admin/send_code','Admin\AdminController@send_code');
+Route::get('admin/send_template_message','Admin\AdminController@send_template_message');
