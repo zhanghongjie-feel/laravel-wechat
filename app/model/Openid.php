@@ -23,8 +23,8 @@ class Openid
             //没有授权 跳转到微信服务器进行授权
             $host = $_SERVER['HTTP_HOST'];  //域名
             $uri = $_SERVER['REQUEST_URI']; //路由参数
-            $redirect_uri = urlencode($host.'\/'.$uri);  // ?code=xx
-            $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.env('WECHAT_APPID').'&redirect_uri='.urlencode($redirect_uri).'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+            $redirect_uri = urlencode("http://".$host.$uri);  // ?code=xx
+            $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.env('WECHAT_APPID').'&redirect_uri='.$redirect_uri.'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
             header("location:".$url);die;
         }else{
             //通过code换取网页授权access_token
