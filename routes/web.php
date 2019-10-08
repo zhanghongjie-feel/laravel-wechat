@@ -143,11 +143,11 @@ Route::get('course/menu','test\CourseController@menu');
 Route::get('admin/login','Admin\LoginController@login');
 Route::get('admin/index','Admin\AdminController@index');
 Route::get('admin/bangding','Admin\AdminController@bangding');
-Route::post('admin/do_bangding','Admin\AdminController@do_bangding');
+Route::any('admin/do_bangding','Admin\AdminController@do_bangding');
 Route::post('admin/do_code','Admin\AdminController@do_code');
 Route::post('admin/send_code','Admin\AdminController@send_code');
 Route::get('admin/send_template_message','Admin\AdminController@send_template_message');
-Route::get('admin/openid','WechatController@getOpenid');
+Route::post('admin/openid','WechatController@getOpenid');
 Route::get('admin/code','Admin\AdminController@code');
 Route::get('admin/test','Admin\AdminController@test');
 

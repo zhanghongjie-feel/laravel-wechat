@@ -23,7 +23,6 @@ class AdminController extends Controller
     }
     public function do_bangding(Request $request){
 
-
         $data=$request->all();
         $info=DB::connection('wechat')->table('admin')->where(['name'=>$data['name'],'password'=>$data['password']])->first();
         if($info){
