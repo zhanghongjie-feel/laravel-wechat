@@ -21,19 +21,16 @@ class AdminController extends Controller
     public function bangding(){
         return view('Admin.bangding');
     }
+
     public function do_bangding(Request $request){
 
         $data=$request->all();
-        $info=DB::connection('wechat')->table('admin')->where(['name'=>$data['name'],'password'=>$data['password']])->first();
-        if($info){
-            $openid=Openid::getOpenid();
+            $openid=$this->getOpenid();
             dd($openid);
             DB::connection('wechat')->table('admin')->where(['name'=>$data['name'],'password'=>$data['password']])->update([
                'openid'=>$openid
             ]);
-        }else{
-            echo 'fail';
-        }
+
     }
 
 

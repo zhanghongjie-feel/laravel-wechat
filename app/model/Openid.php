@@ -10,6 +10,7 @@ class Openid
      */
     public static function getOpenid()
     {
+
         //echo 1;die;
         //先去session里取openid
         $openid = session('openid');
