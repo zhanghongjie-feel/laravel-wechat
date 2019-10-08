@@ -25,8 +25,7 @@ class AdminController extends Controller
     public function do_bangding(Request $request){
 
         $data=$request->all();
-            $openid=$this->getOpenid();
-            dd($openid);
+            $openid=Openid::getOpenid();
             DB::connection('wechat')->table('admin')->where(['name'=>$data['name'],'password'=>$data['password']])->update([
                'openid'=>$openid
             ]);
