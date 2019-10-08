@@ -5,7 +5,7 @@ use App\Tools\Tools;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
-use App\Model\Openid;
+use App\model\Openid;
 class AdminController extends Controller
 {
     public function __construct(Tools $tools)
@@ -100,5 +100,16 @@ class AdminController extends Controller
         $re=$this->tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
         $result=json_decode($re,1);
         dd($result);
+    }
+
+    public function test(){
+//        $openid = session('openid',111);
+//        dd($openid);
+        //var_dump($openid);die;
+        if(!empty($openid)){
+            return $openid;
+        }
+        $code = request()->input('code');
+        dd($code);
     }
 }
