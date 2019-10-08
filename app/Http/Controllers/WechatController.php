@@ -572,7 +572,7 @@ class WechatController extends Controller
                 [
                     'type'=>'view',
                     'name'=>'绑定账号',
-                    'url'=>'http://wechat.distantplace.vip/admin/bangding/'
+                    'url'=>'http://wechat.distantplace.vip/bangding/'
                 ],
             ],
            ];
@@ -733,5 +733,21 @@ class WechatController extends Controller
         $res=$tools->curl_post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
         $result=json_decode($res,1);
         dd($result);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * 获取openid  (用model/OPenid.php调用)
+     */
+    public function getOpenid(Request $request){
+        $req=$request->all();
+//        dd($req['code']);//出来code
+        //通过code换取网页授权access_token和openid,userinfo也可以获取openid,snsapi_base不出来"近期已经授权过，自动登录中"
+        $result=file_get_contents('https://api.weixin.qq.com/sns/oauth2/access_token?appid='.env('WECHAT_APPID').'&secret='.env('WECHAT_APPSECRET').'&code='.$req['code'].'&grant_type=authorization_code');
+        $re=json_decode($result,1);
+        $openid=$re['openid'];
+//        dd($openid);
+        return $openid;
     }
 }

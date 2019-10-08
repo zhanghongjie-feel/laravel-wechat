@@ -9,10 +9,8 @@
         @csrf
                 用户名 <input type="text" name="name"><br><br>
                 密码 <input type="text" name="password"><br><br>
-                手机号 <input type="text"name="tel">
                 {{--<button>发送验证码</button>--}}
             <br><br>
-                验证码 <input type="text" name="code"><br><br>
                 <input type="submit" value="绑定管理员账号">
 
         </form>

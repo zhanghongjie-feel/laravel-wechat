@@ -35,6 +35,7 @@ class LoginController extends Controller
             $wechat_user_info=json_decode($user_info,1);
 //            dd($wechat_user_info);
         $openid=$re['openid'];
+
         $wechat_info=DB::connection('wechat')->table('user_wechat')->where(['openid'=>$openid])->first();
 //        dd($wechat_info);
         if(!empty($wechat_info)){

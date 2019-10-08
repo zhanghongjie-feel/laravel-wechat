@@ -2,7 +2,7 @@
 namespace App\Tools;
 
 class Tools{
-//    public $redis;
+    public $redis;
 
     public function __construct(){
         $this->redis=new \Redis();
@@ -13,11 +13,11 @@ class Tools{
      * curl传输数据
      */
     public function curl_post($url,$data){
-        $curl=curl_init($url);
+        $curl=curl_init($url);//初始化
         curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);//配置参数
         curl_setopt($curl,CURLOPT_POST,1);
         curl_setopt($curl,CURLOPT_POSTFIELDS,$data);
-        $d=curl_exec($curl);
+        $d=curl_exec($curl);//执行
         curl_close($curl);
         return $d;
     }

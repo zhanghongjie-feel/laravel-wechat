@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <base href="/">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,22 +35,22 @@
         <h3>欢迎使用 hAdmin</h3>
         <img src="{{asset('内网通截图20191007103954.png')}}" alt="">
 
-        <form class="m-t" role="form" action="index.html">
-            {{--<div class="form-group">--}}
-                {{--<input type="email" class="form-control" placeholder="用户名" required="">--}}
-            {{--</div>--}}
-
+        <form class="m-t" role="form" action="">
             <div class="form-group">
-                <input type="code" class="form-control" placeholder="手机号" required="">
-                <button id="code" type="submit" class="btn btn-primary block">发送验证码</button>
+                <input type="text" id='name' class="form-control" placeholder="用户名" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" id='password' class="form-control" placeholder="密码" required="">
+            </div>
+            <div class="form-group">
+                <input type="code" id="tel" class="form-control" placeholder="二维码" required="">
+                <button id="code" type="submit" class="btn btn-primary block">获取验证码</button>
 
             </div>
 
             <br>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="验证码" required="">
-            </div>
-            <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+
+            <button type="submit" id='a' class="btn btn-primary block full-width m-b">登 录</button>
 
             
             <p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>
@@ -62,14 +63,44 @@
 <script src="{{asset('js/jquery.min.js?v=2.1.4')}}"></script>
 <script src="{{asset('js/bootstrap.min.js?v=3.3.6')}}"></script>
 
-<script>
+<script type="text/javascript">
+    $(function(){
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+        });
+    });
+
     $('#code').click(function(){
-        data=$('.form-control').val();
-//        alert(data)
-        location.href="{{url('admin/send_code')}}?tel=18518462055"
+        var name=$('#name').val();
+        var password=$('#password').val();
+        // alert(11)
+//        var tel=$('#tel').val();
+        // alert(cart)
+        $.ajax({
+            url: "{{url('admin/do_code')}}" ,
+            type: 'POST',
+            data: {name:name,password:password},
+            dataType: 'json',
+            success: function(data){
+                alert(data.content);
+            }
+        });
+        return false;
+    });
+
+    $('#a').click(function(){
+        var code=$('#code').val();
+        $.ajax({
+            url: "{{url('admin/send_code')}}" ,
+            type: 'POST',
+            data: {code:code},
+            dataType: 'json',
+            success: function(data){
+                alert(data.content);
+            }
+        });
     })
 </script>
-
 
 </body>
 
