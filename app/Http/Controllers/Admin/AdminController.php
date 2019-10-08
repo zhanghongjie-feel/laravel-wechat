@@ -29,6 +29,9 @@ class AdminController extends Controller
         if($info){
             $openid=Openid::getOpenid();
             dd($openid);
+            DB::connection('wechat')->table('admin')->where(['name'=>$data['name'],'password'=>$data['password']])->update([
+               'openid'=>$openid
+            ]);
         }else{
             echo 'fail';
         }
@@ -103,13 +106,13 @@ class AdminController extends Controller
     }
 
     public function test(){
-//        $openid = session('openid',111);
-//        dd($openid);
-        //var_dump($openid);die;
-        if(!empty($openid)){
-            return $openid;
-        }
-        $code = request()->input('code');
-        dd($code);
+
+        $openid = Openid::getOpenid();
+        var_dump($openid);die;
+//        $host = $_SERVER['HTTP_HOST'];  //域名
+//        $uri = $_SERVER['REQUEST_URI']; //路由参数
+//        $redirect_uri = urlencode($host.$uri);
+//
+//        dd($redirect_uri);
     }
 }
