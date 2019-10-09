@@ -101,14 +101,14 @@
       <file leaf-file-name="AdminController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="26" column="36" lean-forward="false" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
+            <state relative-caret-position="630">
+              <caret line="33" column="20" lean-forward="false" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
               <folding>
                 <element signature="e#45#65#0#PHP" expanded="true" />
-                <marker date="1570603955143" expanded="true" signature="2136:2462" ph="{...}" />
-                <marker date="1570603955143" expanded="true" signature="2306:2379" ph="{...}" />
-                <marker date="1570603955143" expanded="true" signature="2383:2456" ph="{...}" />
-                <marker date="1570603955143" expanded="true" signature="3421:3587" ph="..." />
+                <marker date="1570604337838" expanded="true" signature="2039:2365" ph="{...}" />
+                <marker date="1570604337838" expanded="true" signature="2209:2282" ph="{...}" />
+                <marker date="1570604337838" expanded="true" signature="2286:2359" ph="{...}" />
+                <marker date="1570604337838" expanded="true" signature="3324:3490" ph="..." />
               </folding>
             </state>
           </provider>
@@ -117,8 +117,8 @@
       <file leaf-file-name="Openid.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/model/Openid.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="28" column="36" lean-forward="false" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
+            <state relative-caret-position="146">
+              <caret line="15" column="36" lean-forward="true" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -156,8 +156,8 @@
       <find>\</find>
       <find>action</find>
       <find>&lt;link href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;</find>
-      <find>menu</find>
       <find>menuList</find>
+      <find>menu</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -566,12 +566,12 @@
       <workItem from="1569938257796" duration="1024000" />
       <workItem from="1570408601631" duration="24224000" />
       <workItem from="1570494721248" duration="29915000" />
-      <workItem from="1570579441226" duration="11353000" />
+      <workItem from="1570579441226" duration="11735000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="592798000" />
+    <option name="totallyTimeSpent" value="593180000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -950,27 +950,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/Admin/bangding.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="11" column="56" lean-forward="true" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
-          <folding>
-            <marker date="1570590710293" expanded="true" signature="9:23" ph="..." />
-            <marker date="1570590710293" expanded="true" signature="35:54" ph="..." />
-            <marker date="1570590710293" expanded="true" signature="79:88" ph="..." />
-            <marker date="1570590710293" expanded="true" signature="116:140" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/web.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="79" column="49" lean-forward="false" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/WechatController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
@@ -996,24 +975,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/Admin/bangding.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="11" column="56" lean-forward="true" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
+          <folding>
+            <marker date="1570590710293" expanded="true" signature="9:23" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="35:54" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="79:88" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="116:140" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="79" column="49" lean-forward="false" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/model/Openid.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="28" column="36" lean-forward="false" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
+        <state relative-caret-position="146">
+          <caret line="15" column="36" lean-forward="true" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="26" column="36" lean-forward="false" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
+        <state relative-caret-position="630">
+          <caret line="33" column="20" lean-forward="false" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
           <folding>
             <element signature="e#45#65#0#PHP" expanded="true" />
-            <marker date="1570603955143" expanded="true" signature="2136:2462" ph="{...}" />
-            <marker date="1570603955143" expanded="true" signature="2306:2379" ph="{...}" />
-            <marker date="1570603955143" expanded="true" signature="2383:2456" ph="{...}" />
-            <marker date="1570603955143" expanded="true" signature="3421:3587" ph="..." />
+            <marker date="1570604337838" expanded="true" signature="2039:2365" ph="{...}" />
+            <marker date="1570604337838" expanded="true" signature="2209:2282" ph="{...}" />
+            <marker date="1570604337838" expanded="true" signature="2286:2359" ph="{...}" />
+            <marker date="1570604337838" expanded="true" signature="3324:3490" ph="..." />
           </folding>
         </state>
       </provider>
