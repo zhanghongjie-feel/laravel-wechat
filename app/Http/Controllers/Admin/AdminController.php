@@ -22,7 +22,6 @@ class AdminController extends Controller
     }
     public function index(){
         $openid=session('openid');
-        dd($openid);
         return view('Admin.index');
     }
 
@@ -112,16 +111,17 @@ class AdminController extends Controller
         dd($result);
     }
 
-    public function test(){
+    public function getOpenid(){
 
         $openid = Openid::getOpenid();
-        var_dump($openid);die;
+        dd($openid);
 //        $host = $_SERVER['HTTP_HOST'];  //域名
 //        $uri = $_SERVER['REQUEST_URI']; //路由参数
 //        $redirect_uri = urlencode($host.$uri);
 //
 //        dd($redirect_uri);
     }
+
 
 
 }
