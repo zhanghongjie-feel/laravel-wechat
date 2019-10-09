@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f0506a4-13dd-4c53-87d8-808df6608c98" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/Admin/bind.blade.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/layout/admin.blade.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/Admin/bangding.blade.php" afterPath="$PROJECT_DIR$/resources/views/Admin/bangding.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/Admin/login.blade.php" afterPath="$PROJECT_DIR$/resources/views/Admin/login.blade.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,13 +31,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="WechatController.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="WechatController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/WechatController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="554">
-              <caret line="566" column="43" lean-forward="false" selection-start-line="566" selection-start-column="36" selection-end-line="566" selection-end-column="43" />
+            <state relative-caret-position="314">
+              <caret line="594" column="20" lean-forward="true" selection-start-line="594" selection-start-column="20" selection-end-line="594" selection-end-column="20" />
               <folding>
                 <element signature="e#39#61#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/Admin/login.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="668">
+              <caret line="53" column="12" lean-forward="true" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="12" />
+              <folding>
+                <marker date="1570590450889" expanded="true" signature="70:84" ph="..." />
+                <marker date="1570590450889" expanded="true" signature="1022:1054" ph="..." />
+                <marker date="1570590450889" expanded="true" signature="2034:2067" ph="..." />
+                <marker date="1570590450889" expanded="true" signature="2096:2132" ph="..." />
+                <marker date="1570590450889" expanded="true" signature="2555:2575" ph="..." />
+                <marker date="1570590450889" expanded="true" signature="2943:2965" ph="..." />
               </folding>
             </state>
           </provider>
@@ -42,37 +63,30 @@
       <file leaf-file-name="bangding.blade.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/Admin/bangding.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="7" column="62" lean-forward="false" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
+            <state relative-caret-position="330">
+              <caret line="11" column="56" lean-forward="true" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
               <folding>
-                <marker date="1570502000758" expanded="true" signature="136:160" ph="..." />
+                <marker date="1570590710293" expanded="true" signature="9:23" ph="..." />
+                <marker date="1570590710293" expanded="true" signature="35:54" ph="..." />
+                <marker date="1570590710293" expanded="true" signature="79:88" ph="..." />
+                <marker date="1570590710293" expanded="true" signature="116:140" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Tools.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Tools/Tools.php">
+      <file leaf-file-name="admin.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/layout/admin.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="57" column="43" lean-forward="false" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="login.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/Admin/login.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="72" column="4" lean-forward="false" selection-start-line="72" selection-start-column="4" selection-end-line="72" selection-end-column="4" />
+            <state relative-caret-position="360">
+              <caret line="12" column="37" lean-forward="true" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
               <folding>
-                <marker date="1570504673275" expanded="true" signature="70:84" ph="..." />
-                <marker date="1570504673275" expanded="true" signature="1022:1054" ph="..." />
-                <marker date="1570504673275" expanded="true" signature="2021:2054" ph="..." />
-                <marker date="1570504673275" expanded="true" signature="2083:2119" ph="..." />
-                <marker date="1570504673275" expanded="true" signature="2538:2558" ph="..." />
-                <marker date="1570504673275" expanded="true" signature="2902:2924" ph="..." />
+                <marker date="1570589495116" expanded="true" signature="70:84" ph="..." />
+                <marker date="1570589495116" expanded="true" signature="338:345" ph="..." />
+                <marker date="1570589495116" expanded="true" signature="934:943" ph="..." />
+                <marker date="1570589495116" expanded="true" signature="999:1008" ph="..." />
+                <marker date="1570589495116" expanded="true" signature="1068:1101" ph="..." />
+                <marker date="1570589495116" expanded="true" signature="1130:1166" ph="..." />
               </folding>
             </state>
           </provider>
@@ -81,24 +95,24 @@
       <file leaf-file-name="web.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/web.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2786">
-              <caret line="152" column="0" lean-forward="true" selection-start-line="152" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+            <state relative-caret-position="284">
+              <caret line="79" column="49" lean-forward="false" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AdminController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AdminController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="27" column="21" lean-forward="false" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
+            <state relative-caret-position="360">
+              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding>
                 <element signature="e#45#65#0#PHP" expanded="true" />
-                <marker date="1570529835436" expanded="true" signature="1951:2134" ph="{...}" />
-                <marker date="1570529835436" expanded="true" signature="2053:2088" ph="{...}" />
-                <marker date="1570529835436" expanded="true" signature="2092:2128" ph="{...}" />
-                <marker date="1570529835436" expanded="true" signature="3093:3259" ph="..." />
+                <marker date="1570590551518" expanded="true" signature="1969:2295" ph="{...}" />
+                <marker date="1570590551518" expanded="true" signature="2139:2212" ph="{...}" />
+                <marker date="1570590551518" expanded="true" signature="2216:2289" ph="{...}" />
+                <marker date="1570590551518" expanded="true" signature="3254:3420" ph="..." />
               </folding>
             </state>
           </provider>
@@ -107,18 +121,8 @@
       <file leaf-file-name="Openid.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/model/Openid.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="46" column="5" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="46" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoginController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LoginController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="16" column="39" lean-forward="false" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
+            <state relative-caret-position="386">
+              <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -128,8 +132,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dd</find>
-      <find>$user_openid</find>
       <find>add_tag_user</find>
       <find>dudu</find>
       <find>$user_name</find>
@@ -140,7 +142,6 @@
       <find>json_encode</find>
       <find>主页</find>
       <find>index_v1</find>
-      <find>menu</find>
       <find>update</find>
       <find>first.Data</find>
       <find>pace</find>
@@ -158,6 +159,9 @@
       <find>get_wechat_jsapi_ticket</find>
       <find>jsapi</find>
       <find>\</find>
+      <find>action</find>
+      <find>&lt;link href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;</find>
+      <find>menu</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -166,8 +170,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/storage/logs/wechat/2019-09-14.log" />
-        <option value="$PROJECT_DIR$/storage/logs/wechat/2019-09-15.log" />
         <option value="$PROJECT_DIR$/resources/views/login.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/Tag/openidList.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/Exam/liuyan.blade.php" />
@@ -210,13 +212,15 @@
         <option value="$PROJECT_DIR$/../wechat.php" />
         <option value="$PROJECT_DIR$/app/model/Curl.php" />
         <option value="$PROJECT_DIR$/app/Tools/Tools.php" />
-        <option value="$PROJECT_DIR$/resources/views/Admin/bangding.blade.php" />
-        <option value="$PROJECT_DIR$/resources/views/Admin/login.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/LoginController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/WechatController.php" />
-        <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/app/model/Openid.php" />
+        <option value="$PROJECT_DIR$/resources/views/Admin/bind.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/layout/admin.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/Admin/login.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php" />
+        <option value="$PROJECT_DIR$/resources/views/Admin/bangding.blade.php" />
+        <option value="$PROJECT_DIR$/routes/web.php" />
       </list>
     </option>
   </component>
@@ -251,8 +255,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -262,6 +264,82 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="laravel-wechat" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -357,6 +435,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -367,7 +447,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
-    <property name="SearchEverywhereHistoryKey" value="BB&#9;null&#9;null&#10;Curl&#9;null&#9;null&#10;We&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/app/Http/Controllers/WechatController.php&#10;w&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/web.php&#10;Cour&#9;null&#9;null&#10;loca&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/resources/views/location.blade.php&#10;e&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/.env&#10;database&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/database.php&#10;da&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/database.php&#10;env&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/.env&#10;test&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/app/Http/Controllers/testController.php&#10;web&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/web.php&#10;we&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/web.php&#10;app&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/app.php&#10;api.php&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/api.php&#10;cache&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/cache.php&#10;tagList&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/resources/views/Wechat/tagList.blade.php" />
+    <property name="SearchEverywhereHistoryKey" value="We&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/app/Http/Controllers/WechatController.php&#10;BB&#9;null&#9;null&#10;Curl&#9;null&#9;null&#10;w&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/web.php&#10;Cour&#9;null&#9;null&#10;loca&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/resources/views/location.blade.php&#10;e&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/.env&#10;database&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/database.php&#10;da&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/database.php&#10;env&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/.env&#10;test&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/app/Http/Controllers/testController.php&#10;web&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/web.php&#10;we&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/web.php&#10;app&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/app.php&#10;api.php&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/routes/api.php&#10;cache&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/config/cache.php&#10;tagList&#9;FILE&#9;file://C:/wnmp/www/laravel-wechat/resources/views/Wechat/tagList.blade.php" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -489,12 +569,13 @@
       <workItem from="1569937950220" duration="47000" />
       <workItem from="1569938257796" duration="1024000" />
       <workItem from="1570408601631" duration="24224000" />
-      <workItem from="1570494721248" duration="23956000" />
+      <workItem from="1570494721248" duration="29915000" />
+      <workItem from="1570579441226" duration="10377000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="575486000" />
+    <option name="totallyTimeSpent" value="591822000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -506,27 +587,27 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30096567" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19635193" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32949308" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299356" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295699" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39318183" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30096567" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19635193" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299356" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -564,20 +645,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/views/Test/addTag.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/Wechat/tagList.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="31" lean-forward="true" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/Tag/pushTagMsg.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
@@ -748,7 +815,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-240">
           <caret line="32" column="26" lean-forward="false" selection-start-line="32" selection-start-column="26" selection-end-line="32" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -794,7 +860,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="10" column="32" lean-forward="false" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -810,7 +875,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1170">
           <caret line="6" column="26" lean-forward="true" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -818,7 +882,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
           <caret line="53" column="18" lean-forward="false" selection-start-line="53" selection-start-column="18" selection-end-line="53" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -826,7 +889,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1170">
           <caret line="30" column="33" lean-forward="true" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -842,7 +904,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -854,36 +915,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/WechatController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="554">
-          <caret line="566" column="43" lean-forward="false" selection-start-line="566" selection-start-column="36" selection-end-line="566" selection-end-column="43" />
-          <folding>
-            <element signature="e#39#61#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Tools/Tools.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="488">
-          <caret line="57" column="43" lean-forward="false" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="43" />
+        <state relative-caret-position="90">
+          <caret line="3" column="12" lean-forward="false" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/Admin/login.blade.php">
+    <entry file="file://$PROJECT_DIR$/resources/views/Admin/bind.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="72" column="4" lean-forward="false" selection-start-line="72" selection-start-column="4" selection-end-line="72" selection-end-column="4" />
-          <folding>
-            <marker date="1570504673275" expanded="true" signature="70:84" ph="..." />
-            <marker date="1570504673275" expanded="true" signature="1022:1054" ph="..." />
-            <marker date="1570504673275" expanded="true" signature="2021:2054" ph="..." />
-            <marker date="1570504673275" expanded="true" signature="2083:2119" ph="..." />
-            <marker date="1570504673275" expanded="true" signature="2538:2558" ph="..." />
-            <marker date="1570504673275" expanded="true" signature="2902:2924" ph="..." />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -895,42 +939,85 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/web.php">
+    <entry file="file://$PROJECT_DIR$/app/model/Openid.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2786">
-          <caret line="152" column="0" lean-forward="true" selection-start-line="152" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+        <state relative-caret-position="386">
+          <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/Admin/login.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="668">
+          <caret line="53" column="12" lean-forward="true" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="12" />
+          <folding>
+            <marker date="1570590450889" expanded="true" signature="70:84" ph="..." />
+            <marker date="1570590450889" expanded="true" signature="1022:1054" ph="..." />
+            <marker date="1570590450889" expanded="true" signature="2034:2067" ph="..." />
+            <marker date="1570590450889" expanded="true" signature="2096:2132" ph="..." />
+            <marker date="1570590450889" expanded="true" signature="2555:2575" ph="..." />
+            <marker date="1570590450889" expanded="true" signature="2943:2965" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layout/admin.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="12" column="37" lean-forward="true" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+          <folding>
+            <marker date="1570589495116" expanded="true" signature="70:84" ph="..." />
+            <marker date="1570589495116" expanded="true" signature="338:345" ph="..." />
+            <marker date="1570589495116" expanded="true" signature="934:943" ph="..." />
+            <marker date="1570589495116" expanded="true" signature="999:1008" ph="..." />
+            <marker date="1570589495116" expanded="true" signature="1068:1101" ph="..." />
+            <marker date="1570589495116" expanded="true" signature="1130:1166" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/Admin/bangding.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="7" column="62" lean-forward="false" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
+        <state relative-caret-position="330">
+          <caret line="11" column="56" lean-forward="true" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
           <folding>
-            <marker date="1570502000758" expanded="true" signature="136:160" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="9:23" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="35:54" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="79:88" ph="..." />
+            <marker date="1570590710293" expanded="true" signature="116:140" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/model/Openid.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="488">
-          <caret line="46" column="5" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="46" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Admin/AdminController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="27" column="21" lean-forward="false" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
+        <state relative-caret-position="360">
+          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding>
             <element signature="e#45#65#0#PHP" expanded="true" />
-            <marker date="1570529835436" expanded="true" signature="1951:2134" ph="{...}" />
-            <marker date="1570529835436" expanded="true" signature="2053:2088" ph="{...}" />
-            <marker date="1570529835436" expanded="true" signature="2092:2128" ph="{...}" />
-            <marker date="1570529835436" expanded="true" signature="3093:3259" ph="..." />
+            <marker date="1570590551518" expanded="true" signature="1969:2295" ph="{...}" />
+            <marker date="1570590551518" expanded="true" signature="2139:2212" ph="{...}" />
+            <marker date="1570590551518" expanded="true" signature="2216:2289" ph="{...}" />
+            <marker date="1570590551518" expanded="true" signature="3254:3420" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="79" column="49" lean-forward="false" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/WechatController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="594" column="20" lean-forward="true" selection-start-line="594" selection-start-column="20" selection-end-line="594" selection-end-column="20" />
+          <folding>
+            <element signature="e#39#61#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

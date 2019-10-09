@@ -35,7 +35,7 @@
         <h3>欢迎使用 hAdmin</h3>
         <img src="{{asset('内网通截图20191007103954.png')}}" alt="">
 
-        <form class="m-t" role="form" action="">
+        <form class="m-t" role="form">
             <div class="form-group">
                 <input type="text" id='name' class="form-control" placeholder="用户名" required="">
             </div>
@@ -43,14 +43,13 @@
                 <input type="password" id='password' class="form-control" placeholder="密码" required="">
             </div>
             <div class="form-group">
-                <input type="code" id="tel" class="form-control" placeholder="二维码" required="">
-                <button id="code" type="submit" class="btn btn-primary block">获取验证码</button>
-
+                <input type="code" id="code" class="form-control" placeholder="验证码" required="">
+                <button id="code_get" type="submit" class="btn btn-primary block">获取验证码</button>
             </div>
 
             <br>
+            <input type="button" id='a' class="btn btn-primary block full-width m-b" value="login">
 
-            <button type="submit" id='a' class="btn btn-primary block full-width m-b">登 录</button>
 
             
             <p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>
@@ -59,6 +58,10 @@
     </div>
 </div>
 
+
+</body>
+
+</html>
 <!-- 全局js -->
 <script src="{{asset('js/jquery.min.js?v=2.1.4')}}"></script>
 <script src="{{asset('js/bootstrap.min.js?v=3.3.6')}}"></script>
@@ -70,7 +73,7 @@
         });
     });
 
-    $('#code').click(function(){
+    $('#code_get').click(function(){
         var name=$('#name').val();
         var password=$('#password').val();
         // alert(11)
@@ -89,6 +92,7 @@
     });
 
     $('#a').click(function(){
+        alert(123);die;
         var code=$('#code').val();
         $.ajax({
             url: "{{url('admin/send_code')}}" ,
@@ -99,9 +103,6 @@
                 alert(data.content);
             }
         });
+        return false;
     })
 </script>
-
-</body>
-
-</html>

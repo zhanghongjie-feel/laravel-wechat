@@ -23,11 +23,11 @@ class AdminController extends Controller
     }
 
     public function do_bangding(Request $request){
+        $openid=Openid::getOpenid();
 
         $data=$request->all();
         $name=$data['name'];
         $password=$data['password'];
-            $openid=Openid::getOpenid();
             DB::connection('wechat')->table('admin')->where(['name'=>$name,'password'=>$password])->update([
                'openid'=>$openid
             ]);
@@ -42,8 +42,8 @@ class AdminController extends Controller
 //        die;
         $data=$request->all();
 
-        $db_info=DB::connection('wechat')->table('user_info')->where(['name'=>$data['name'],'password'=>$data['password']])->first();
-        $openid=$db_info['openid'];
+        $db_info=DB::connection('wechat')->table('admin')->where(['name'=>$data['name'],'password'=>$data['password']])->first();
+        $openid=$db_info->openid;
 //        if(!$db_info->name){
 //            $result=DB::connection('wechat')->table('user_info')->where(['openid'=>$openid])->update([
 //                'name'=>$data['name'],'password'=>$data['password'],'reg_time'=>time(),'tel'=>$data['tel']
@@ -55,7 +55,6 @@ class AdminController extends Controller
 //            }
 //        }
         $code=rand(1000,9999);
-
         if($db_info){
                 $this->tools->redis->set('code',$code,180);
                 $this->send_template_message($code,$openid);
@@ -67,12 +66,14 @@ class AdminController extends Controller
 
     public function send_code(Request $request){
         $data=$request->all();
-
+        $code=$data['code'];
+//        dd($data);
         $db=$this->tools->redis->get('code');
-        if($data==$db){
-            echo 'yes';
+//        dd($db);
+        if($code==$db){
+            return json_encode(['ret'=>1,'content'=>'登陆成功']);
         }else{
-            echo 'fail';
+            return json_encode(['ret'=>0,'content'=>'登陆失败']);
         }
     }
 
@@ -112,4 +113,6 @@ class AdminController extends Controller
 //
 //        dd($redirect_uri);
     }
+
+
 }
