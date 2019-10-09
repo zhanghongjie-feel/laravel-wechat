@@ -15,6 +15,8 @@ class AdminController extends Controller
     }
 
     public function index(){
+        $a=session('openid');
+        dd($a);
         return view('Admin.index');
     }
 
@@ -32,8 +34,6 @@ class AdminController extends Controller
                 'openid'=>$openid
             ]);
             dd($db);
-
-
 
     }
 
