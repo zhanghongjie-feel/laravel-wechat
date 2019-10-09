@@ -13,10 +13,16 @@ class AdminController extends Controller
 
         $this->tools=$tools;
     }
-
-    public function index(){
-        $a=session('openid');
+    public function a(){
+        session(['open'=>111]);
+    }
+    public function b(){
+        $a=session('open');
         dd($a);
+    }
+    public function index(){
+        $openid=session('openid');
+        dd($openid);
         return view('Admin.index');
     }
 

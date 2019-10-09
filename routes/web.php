@@ -152,4 +152,5 @@ Route::get('admin/code','Admin\AdminController@code');
 Route::get('admin/test','Admin\AdminController@test');
 
 
-
+Route::get('admin/a','Admin\AdminController@a');
+Route::get('admin/b','Admin\AdminController@b');
