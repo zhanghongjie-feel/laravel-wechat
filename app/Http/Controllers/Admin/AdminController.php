@@ -27,9 +27,10 @@ class AdminController extends Controller
             $data=$request->all();
             $name=$data['name'];
             $password=$data['password'];
-            DB::connection('wechat')->table('admin')->where(['name'=>$name,'password'=>$password])->update([
+            $db=DB::connection('wechat')->table('admin')->where(['name'=>$name,'password'=>$password])->update([
                 'openid'=>$openid
             ]);
+            dd($db);
         }else{
             $openid=Openid::getOpenid();
         }
