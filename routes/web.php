@@ -150,7 +150,7 @@ Route::get('admin/send_template_message','Admin\AdminController@send_template_me
 Route::post('admin/openid','WechatController@getOpenid');
 Route::get('admin/code','Admin\AdminController@code');
 Route::get('admin/test','Admin\AdminController@test');
-Route::any('admin/getOpenid','Admin\AdminController@getOpenid');
+Route::any('wechat_login','Admin\LoginController@wechat_login');
 
 Route::get('admin/a','Admin\AdminController@a');
 Route::get('admin/b','Admin\AdminController@b');

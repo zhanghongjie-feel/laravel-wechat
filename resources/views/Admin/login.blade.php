@@ -50,7 +50,7 @@
             <br>
             <input type="button" id='a' class="btn btn-primary block full-width m-b" value="login">
 
-            <img src="http://qr.liantu.com/api.php?text=http://wechat.distantplace.vip/admin/getOpenid"/>
+            <img src="http://qr.liantu.com/api.php?text={{$redirect_url}}"/>
 
             
             <p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>

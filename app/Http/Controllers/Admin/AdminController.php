@@ -111,10 +111,14 @@ class AdminController extends Controller
         dd($result);
     }
 
+    //二维码登录
     public function getOpenid(){
 
         $openid = Openid::getOpenid();
-        dd($openid);
+//        dd($openid);
+        $id=time().rand(1000,9999); //用户标识
+        Cache::put('wechatLogin_'.$id,$openid,100);
+        return '扫码成功';
 //        $host = $_SERVER['HTTP_HOST'];  //域名
 //        $uri = $_SERVER['REQUEST_URI']; //路由参数
 //        $redirect_uri = urlencode($host.$uri);
@@ -123,5 +127,8 @@ class AdminController extends Controller
     }
 
 
+    public function checkWechatLogin(){
+
+    }
 
 }
